@@ -1,0 +1,374 @@
+<!--ai-->
+<!-------------------DOCUMENTATION------------------------
+this is an artificial intelligence created by Daniel Rehman. 
+		  see "info_ai.html" for more details.
+-------------------------------------------------------->
+<!DOCTYPE html><html><head><style>
+#speech{font-weight: bold;}
+p{color: #C0C0C0; font-weight: bold;}
+p:last-child{ color: black;}
+#div{font-size: 20px; font-family: monospace; padding-left: 20px;}
+#overlay{position:fixed; height:100%; width:90%; z-index:100;}
+*:focus{outline:none;}
+</style><title>ai</title><script src="jquery-1.12.3.js"></script><script>
+
+var users = {"deniylreimn":"me","guest":"password", "root":"root"};
+var currentuser = '';
+var conversation = [];
+var previouscode = [];
+var previouscommands = [];
+var commands = ["list of commands:","/", "//", "/.","/login","/clear","/add","/kill","/display conversation","/display dictionary","/display predicates","/display previous commands","/display max word length","/new","/test", "/who am i","/reset","/info","/list", "/set max word length", "/break", "/hide"];
+var commandpointer;
+var dictionary =['STR','.a','.e','.i','.o','.u','.aa','.ae','.ai','.ao','.au','.ea','.ee','.ei','.eo','.eu','.ia','.ie','.ii','.io','.iu','.oa','.oe','.oi','.oo','.ou','.ua','.ue','.ui','.uo','.uu','.aaa', '.aae', '.aai', '.aao', '.aau', '.aea', '.aee', '.aei', '.aeo', '.aeu', '.aia', '.aie', '.aii', '.aio', '.aiu', '.aoa', '.aoe', '.aoi', '.aoo', '.aou', '.aua', '.aue', '.aui', '.auo', '.auu', '.eaa', '.eae', '.eai', '.eao', '.eau', '.eea', '.eee', '.eei', '.eeo', '.eeu', '.eia', '.eie', '.eii', '.eio', '.eiu', '.eoa', '.eoe', '.eoi', '.eoo', '.eou', '.eua', '.eue', '.eui', '.euo', '.euu', '.iaa', '.iae', '.iai', '.iao', '.iau', '.iea', '.iee', '.iei', '.ieo', '.ieu', '.iia', '.iie', '.iii', '.iio', '.iiu', '.ioa', '.ioe', '.ioi', '.ioo', '.iou', '.iua', '.iue', '.iui', '.iuo', '.iuu', '.oaa', '.oae', '.oai', '.oao', '.oau', '.oea', '.oee', '.oei', '.oeo', '.oeu', '.oia', '.oie', '.oii', '.oio', '.oiu', '.ooa', '.ooe', '.ooi', '.ooo', '.oou', '.oua', '.oue', '.oui', '.ouo', '.ouu', '.uaa', '.uae', '.uai', '.uao', '.uau', '.uea', '.uee', '.uei', '.ueo', '.ueu', '.uia', '.uie', '.uii', '.uio', '.uiu', '.uoa', '.uoe', '.uoi', '.uoo', '.uou', '.uua', '.uue', '.uui', '.uuo', '.uuu','ba','be','bi','bo','bu','baa','bae','bai','bao','bau','bea','bee','bei','beo','beu','bia','bie','bii','bio','biu','boa','boe','boi','boo','bou','bua','bue','bui','buo','buu','ca','ce','ci','co','cu','caa','cae','cai','cao','cau','cea','cee','cei','ceo','ceu','cia','cie','cii','cio','ciu','coa','coe','coi','coo','cou','cua','cue','cui','cuo','cuu','da','de','di','do','du','daa','dae','dai','dao','dau','dea','dee','dei','deo','deu','dia','die','dii','dio','diu','doa','doe','doi','doo','dou','dua','due','dui','duo','duu','fa','fe','fi','fo','fu','faa','fae','fai','fao','fau','fea','fee','fei','feo','feu','fia','fie','fii','fio','fiu','foa','foe','foi','foo','fou','fua','fue','fui','fuo','fuu','ga','ge','gi','go','gu','gaa','gae','gai','gao','gau','gea','gee','gei','geo','geu','gia','gie','gii','gio','giu','goa','goe','goi','goo','gou','gua','gue','gui','guo','guu','ja','je','ji','jo','ju','jaa','jae','jai','jao','jau','jea','jee','jei','jeo','jeu','jia','jie','jii','jio','jiu','joa','joe','joi','joo','jou','jua','jue','jui','juo','juu','ka','ke','ki','ko','ku','kaa','kae','kai','kao','kau','kea','kee','kei','keo','keu','kia','kie','kii','kio','kiu','koa','koe','koi','koo','kou','kua','kue','kui','kuo','kuu','la','le','li','lo','lu','laa','lae','lai','lao','lau','lea','lee','lei','leo','leu','lia','lie','lii','lio','liu','loa','loe','loi','loo','lou','lua','lue','lui','luo','luu','ma','me','mi','mo','mu','maa','mae','mai','mao','mau','mea','mee','mei','meo','meu','mia','mie','mii','mio','miu','moa','moe','moi','moo','mou','mua','mue','mui','muo','muu','na','ne','ni','no','nu','naa','nae','nai','nao','nau','nea','nee','nei','neo','neu','nia','nie','nii','nio','niu','noa','noe','noi','noo','nou','nua','nue','nui','nuo','nuu','pa','pe','pi','po','pu','paa','pae','pai','pao','pau','pea','pee','pei','peo','peu','pia','pie','pii','pio','piu','poa','poe','poi','poo','pou','pua','pue','pui','puo','puu','sa','se','si','so','su','saa','sae','sai','sao','sau','sea','see','sei','seo','seu','sia','sie','sii','sio','siu','soa','soe','soi','soo','sou','sua','sue','sui','suo','suu','ta','te','ti','to','tu','taa','tae','tai','tao','tau','tea','tee','tei','teo','teu','tia','tie','tii','tio','tiu','toa','toe','toi','too','tou','tua','tue','tui','tuo','tuu','va','ve','vi','vo','vu','vaa','vae','vai','vao','vau','vea','vee','vei','veo','veu','via','vie','vii','vio','viu','voa','voe','voi','voo','vou','vua','vue','vui','vuo','vuu','za','ze','zi','zo','zu','zaa','zae','zai','zao','zau','zea','zee','zei','zeo','zeu','zia','zie','zii','zio','ziu','zoa','zoe','zoi','zoo','zou','zua','zue','zui','zuo','zuu','.ay','.ey','.iy','.oy','.uy','by','cy','dy','fy','gy','jy','ky','ly','my','ny','py','ry','sy','ty','vy','.y','.yy'];
+var dictionary_ofpredicates = ["pau","bai","geu"];
+var dictionary_ofarguments = ["ti","mi","ki","fu","STR"];
+var dictionary_ofstructurewords = ["da","de","ba","bo","nu","ni","sa","ca","fa","se" ];
+var vowels = "aeiouy";
+var maxwordlength = 4;
+var disabled = false;
+var responsedelay = 100;
+
+function speak(){
+	if (disabled==false){
+	var speech = document.getElementById("speech").value;
+	if(event.keyCode == 13){ 
+		
+function check(speech){
+	var parsedspeech = prune(speech);
+	if(parsedspeech == "u"){
+		var newwindow = window.open('au.html', '_blank', "resizable=1,height=10,width=10,left=500,top=150,location=0");
+		newwindow.document.write("<span style='padding-left: 20px; font-size: 20px;font-family:monospace;'><b>&#10095; au .u<b></span>");
+		self.close();}
+	else if(speech == "x")
+		self.close();
+	else if(speech == ";")
+		execute("hide");
+	else if(speech == "r")
+		location.reload();
+	else if(parsedspeech == "j")
+			go();
+	else if(speech.charAt(0) == "/"){
+		var command = speech.substring(1);
+		execute(command);
+		previouscommands.push("/"+command);}
+	else if(parsedspeech == "c")
+		clear();
+	else if(parsedspeech == "d")
+		display(conversation);
+	else if(parsedspeech == "l")
+		execute("list");
+	else if(parsedspeech == "")
+		alert("ka pau du");
+	else
+		print(respond(speech), speech);}
+
+function clear(){
+	var div = document.getElementById('div');
+	div.innerHTML = '';}
+
+function login(){
+	var username = window.prompt("please enter your username.", "guest");
+	if (username in users){
+		var password = window.prompt("please enter your password.", "password");
+		if (users[username] == password){
+			alert("you are logged in as "+username);
+			currentuser = username;}
+		else alert("invalid password.");}
+	else alert("that isn't a user here.");}
+
+function add(){
+	var domain = window.prompt("please enter the domain.", "dictionary");
+	var element = window.prompt("please enter the element you wish to add.");
+		 if (domain=="dictionary") dictionary.push(element);
+	else if(domain=="dictionary of predicates") dictionary_ofpredicates.push(element);
+	else if(domain=="conversation") conversation.push(element);
+	else if(domain=="list of commands") commands.push(element);
+	else if(domain=="previous commands") previouscommands.push(element);
+	else alert("domain not found.");}
+
+function hideall(){
+	$("body").css("display", "none");
+	$("*").click(function (){$("body").css("display", "inline")})}
+
+function execute(command){
+	     if(command == "")
+			 alert("please type a command.");
+	else if(command == "/"){
+			 if(currentuser=="root")
+			 go();
+			 else alert("only root can do that.");}
+	else if(command == ".")
+			 alert("initiated");
+	else if(command == "login")
+			 login();
+	else if(command == "clear")
+			 clear();
+	else if(command == "add"){
+			 if(currentuser=="root")
+				 add();
+			 else alert("only root can do that.");}
+	else if(command == "kill" || command == "close" || command == "exit" || command == "quit")
+			 self.close();
+	else if(command == "display conversation")
+			 display(conversation);
+	else if(command == "display dictionary")
+			 display(dictionary);
+	else if(command == "display predicates"){
+			 display(dictionary_ofpredicates);}
+	else if(command == "display previous commands"){
+			 display(previouscommands);}
+	else if(command == "new"){
+			 window.open("ai.html");}
+	else if(command == "who am i"){
+			 if(currentuser == '') alert("you're not logged in.");
+			 else{ alert("you are: "+currentuser);}}
+	else if(command == "reset" || command == "reload" || command == "refresh")
+			 location.reload();
+	else if(command == "info" || command == "?")
+			 window.open("info_ai.html");
+	else if(command == "list")
+			 display(commands);
+	else if(command == "test")
+			 alert('everything seems to be normal.');
+	else if(command == "display max word length")
+			 alert(maxwordlength);
+	else if(command == "set max word length"){
+			 if(currentuser=="root"){
+				 var newwordlength = window.prompt("please enter the new maximum word length.", 4);
+				 maxwordlength = Number(newwordlength);}
+			 else alert("only root can do that.");}
+	else if(command == "break"){
+			 if(currentuser=="root"){
+				 document.write("good job, you broke it.");}
+			 else alert("only root can do that.");}
+	else if(command == "hide")
+			 hideall();
+	else if(command == "home")
+			 window.location.href = 'deniylreimn.github.io';
+	else if(command == ""){}
+    else if(command == ""){}
+	else alert("command not found.");}
+
+function display(array){
+	var newwindow = window.open('display.html', '_blank', "scrollbars=1,resizable=1,height=500,width=500");
+	for (i=0; i<array.length; i++){
+		if (array[i] == ""){}else if((i+1)%2==0){
+			newwindow.document.write("<span style='padding-left: 20px; font-size: 20px; font-family:monospace;'><b>&nbsp;&nbsp;"+array[i]+"<b></span><br><br>");}
+		else{newwindow.document.write("<span style='padding-left: 20px; font-size: 20px; font-family:monospace;'><b>"+array[i]+"<b></span><br><br>");}}}
+			
+function includes(string,substring){
+	return string.indexOf(substring) != -1}
+	
+function parse(rawtext){
+	var sentence_string = '';
+	var sentence_array = [];
+	var labeled_sentence_array = [];
+	var strings_insentence = [];
+	
+	function convert_array_to_string(array){
+		var string = '';
+		for (i=0;i<array.length;i++){
+			string += array[i]+" ";}
+		return string;}
+			
+	function Su(input){
+		if(includes(input,"su.")){
+			input += ".";
+			var Su_count = input.split("su").length-1;
+			for (i=0;i<Su_count;i++){
+				var input1 = input.split("su.")[1];
+				input1 = input1.split(".")[0];
+				strings_insentence.push(input1);
+				var input2 = "su." + input1 + ".";
+				input = input.replace(input2, ".STR.");}
+			return input;}
+		else{return input;}}
+
+	function lexer(input){
+		input = "." + input;
+		for(k=0;k<maxwordlength;k++){input = input + ".";}
+		var token = '';
+		var character = '';
+		for(i=0;i<input.length;i++){
+			character = input.charAt(i);
+			token += character;
+			for(j=0;j<dictionary.length;j++){
+				if(token==dictionary[j] && (includes(vowels,input.charAt(i+1))==false)){
+					sentence_array.push(token);
+					token='';
+					break;}
+				else if(token == "STR"){
+					sentence_array.push(token);
+					token='';
+					break;}
+				else if(token.length>maxwordlength){
+					i -= maxwordlength;
+					token = '';
+					break;}}}
+		sentence_string = convert_array_to_string(sentence_array);
+		return sentence_string;}
+
+	function labeler(input){
+		var wordadded;
+		for (i=0;i<sentence_array.length;i++){
+			wordadded = false;
+			for (j=0;j<dictionary_ofarguments.length;j++){
+				if (dictionary_ofarguments[j] == sentence_array[i]){
+					labeled_sentence_array.push(["argument", sentence_array[i]]);
+					wordadded = true;
+					break;}}
+			for (j=0;j<dictionary_ofpredicates.length;j++){
+				if (dictionary_ofpredicates[j] == sentence_array[i]){
+					labeled_sentence_array.push(["predicate", sentence_array[i]]);
+					wordadded = true;
+					break;}}
+			for (j=0;j<dictionary_ofstructurewords.length;j++){
+				if (dictionary_ofstructurewords[j] == sentence_array[i]){
+					labeled_sentence_array.push(["structureword", sentence_array[i]]);
+					wordadded = true;
+					break;}}
+			if(wordadded == false){
+				labeled_sentence_array.push(["word", sentence_array[i]]);}}
+		console.log(labeled_sentence_array);
+		return input}
+
+	function parser(input){
+	var text = []
+	}
+
+	var parsedinput = prune(rawtext);
+		parsedinput = U(parsedinput);
+		parsedinput = Su(parsedinput);
+		parsedinput = lexer(parsedinput);
+		parsedinput = labeler(parsedinput);
+	if(parsedinput == ""){alert("ka pau du");}
+	return parsedinput;}
+
+function deletedots(input){
+	input = input.replace(/\.{2,}/g, ".");
+	while (input.charAt(0) == "." && includes(vowels,input.charAt(1))==false)
+		input = input.substr(1);
+	while(input.charAt(input.length-1)==".")
+		input = input.substring(0, input.length-1);
+	return input;}
+	
+function prune(rawtext){
+	rawtext = rawtext.toLowerCase().replace(/\[.*\]/g, "").replace(/[^pbtdkgszcjfvmnluoaeiy.]/g, "");
+	rawtext = deletedots(rawtext);
+	return rawtext;}
+
+function spaceprune(rawtext){
+	rawtext = rawtext.toLowerCase().replace(/[^\[\]pbtdkgszcjfvmnluoaeiyh.: ]/g, "");
+	while(rawtext.charAt(0)==" ")
+		rawtext = rawtext.substr(1);
+	rawtext = U(deletedots(rawtext));
+	return rawtext;}
+	
+function U(input){
+	input = "."+input;
+	var charatU = input.charAt(input.indexOf(".u")+2);
+	if(includes(input,".u") && includes(vowels, charatU)==false){
+		input = input.split(".u")[0];
+		input = deletedots(input);
+		return input;}
+	else{
+		input = deletedots(input);
+		return input;}}
+
+function respond(input){
+	var parsedinput = parse(input);
+
+	return parsedinput;}
+	
+function print(response, speech){
+	if(response != "" && speech != ""){
+		var myspeech =  "\u276F " + spaceprune(speech);
+		var preparedresponse =  "\u00A0\u00A0\u00A0\u276F " + response;
+		conversation.push(spaceprune(speech), response);
+		var div = document.getElementById("div");
+		var speech_p = document.createElement("p");
+		var response_p = document.createElement("p");
+		var speech_p_textnode = document.createTextNode(myspeech);
+		var response_p_textnode = document.createTextNode(preparedresponse);
+		speech_p.appendChild(speech_p_textnode);
+		response_p.appendChild(response_p_textnode);
+		div.appendChild(speech_p);
+		setTimeout(function(){div.appendChild(response_p);}, responsedelay);
+		document.getElementById("speech").value = "";}}
+
+check(speech);
+document.getElementById("speech").value = "";
+setTimeout(function(){window.scrollBy(0,100);},responsedelay+50);
+commandpointer = previouscommands.length;}
+	
+else if (event.keyCode == 40){
+	if (commandpointer < previouscommands.length){
+		commandpointer += 1;
+		if (previouscommands[commandpointer] === undefined)
+			document.getElementById("speech").value = "";
+		else document.getElementById("speech").value = previouscommands[commandpointer];}}
+else if (event.keyCode == 38){
+	if (commandpointer > 0){
+		commandpointer -= 1;
+		document.getElementById("speech").value = previouscommands[commandpointer];}}}}
+			
+function checkjs(){
+	var js = document.getElementById("speech").value;
+	var textarea = document.getElementById("speech");
+	if (js.charAt(js.length-1) == "/" && js.charAt(js.length-2) == "/"){
+		js = js.replace("//", "");
+		window.eval(js);
+		previouscode.push(js);
+		var input = document.createElement("input");
+		input.setAttribute("id", "speech");
+		input.setAttribute("type", "text");
+		input.setAttribute("style", "font-size:20px; font-family:monospace; padding-left: 13px; border:none; width:80%");
+		input.setAttribute("onkeydown", "speak();");
+		document.body.replaceChild(input, textarea);
+		document.	getElementById("speech").focus();
+		var prompt = document.getElementById("prompt");
+		prompt.setAttribute("style", "color: #33CCFF; padding-left: 20px; font-family: monospace; font-size: 20px");
+		disabled = false;}}
+		
+function go(){
+	disabled = true;
+	var textarea = document.createElement("textarea");
+	textarea.setAttribute("id", "speech");
+	textarea.setAttribute("style", "font-size:20px; font-family:monospace; padding-left: 13px; border:none; width:80%");
+	textarea.setAttribute("onkeyup", "checkjs();");
+	textarea.setAttribute("rows", "1");
+	textarea.setAttribute("placeholder", "you are in javascript mode."); 
+	var speech = document.getElementById('speech');
+	document.body.replaceChild(textarea, speech);
+	var prompt = document.getElementById("prompt");
+	prompt.setAttribute("style", "color: #FF0000; padding-left: 20px; font-family: monospace; font-size: 20px");
+	setTimeout(function(){document.getElementById("speech").focus();},50);}
+
+</script></head><body>
+<div
+		id="div"
+		onclick="document.getElementById('speech').focus(); return false;"></div>
+<span
+		id="prompt"
+		style='
+			color: #33CCFF;
+			padding-left: 20px;
+			font-family: monospace;
+			font-size: 20px'>
+	<b>&#10095;</b></span>
+<input
+		id="speech"
+		type="text"
+		style="
+			font-size:20px;
+			font-family:monospace;
+			padding-left: 13px;
+			border:none;
+			width:80%"
+		onkeydown="speak()"
+		autofocus>
+<div
+		id="overlay"
+		onclick="document.getElementById('speech').focus(); return false;"></div>
+
+</body></html>

@@ -1,0 +1,58 @@
+<!doctype html>
+<html><head><title>{random.generator}</title></head>
+<body>
+<code>
+
+<div align="center">
+<h3>{random.generator}</h3>
+<br>
+<p style="width:50%;" align="center">this document is intended to be used to generate words for the language "free-speak".<br> inputing into the text box below will yeild two random numbers, one for consonants and one for vowels. additionally, there are two buttons to individually control each random number. after desired result is generated, you may press the converter button to translate the numbers into a word.<br> have fun. </p>
+<input type="text" style="align:center; width:8px;" onkeypress="myrandom(), myrandom2()">
+</div>
+
+<div style="float: left; width: 45%;">
+<div align="center"><button onclick="myrandom()">{consonants}</button></div>
+<p id="demo" align="center" style="font-size:50px"></p>
+</div>
+
+<div style="float: right; width: 45%;">
+<div align="center"><button onclick="myrandom2()">{vowels}</button></div>
+<p id="demo2" align="center" style="font-size:50px"></p>
+</div>
+<br>
+
+<div align="center">
+<button onclick="convert(myrandom)">{convert}</button>
+</div>
+
+<script>
+var x = document.getElementById("demo");
+var x2 = document.getElementById("demo2");
+var y = number(demo);
+var y2 = number(demo2	);
+
+function myrandom()
+{var num = Math.floor(Math.random() * 1000000);
+x.innerHTML = num
+return num;}
+
+function myrandom2()
+{var num2 = Math.floor(Math.random() * 1000000);
+x2.innerHTML = num2
+return num2;}
+
+function convert(myrandom) 
+{
+h3.innerHTML = myrandom;
+/*
+if(myrandom < 10000000)
+{demo.innerHTML = "F";}
+else
+{alert("did not work!");}*/
+}
+</script>
+
+</div>
+</code>
+</body>
+</html>

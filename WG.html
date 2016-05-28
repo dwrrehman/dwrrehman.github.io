@@ -1,0 +1,119 @@
+<!doctype html>
+<html><head><title>{word.generator}</title></head>
+<body>
+<code>
+
+<div align="center">
+<h3>{word.generator}</h3>
+<br>
+<p style="width:50%;" align="center">this document is intended to be used to generate words for the language "free-speak".<br>press the {generate} button and see what happens!.</p>
+
+<div align="center">
+<button onclick="go()">{generate}</button>
+<br><br>
+<p id="sandbox" style="font-size:50px"></p>
+</div>
+
+<script>
+
+function go()
+{var num = Math.floor(Math.random()*10000);
+var num2 = Math.floor(Math.random()*10000);
+
+if(num >= 8892)
+{var con = "M";}
+else if(num < 8892 && num >= 7853)
+{var con = "P";}
+else if(num < 7853 && num >= 6883)
+{var con = "T";}
+else if(num < 6883 && num >= 5982)
+{var con = "K";}
+else if(num < 5982 && num >= 5150)
+{var con = "B";}
+else if(num < 5150 && num >= 4387)
+{var con = "D";}
+else if(num < 4387 && num >= 3693)
+{var con = "G";}
+else if(num < 3693 && num >= 3068)
+{var con = "N";}
+else if(num < 3068 && num >= 2443)
+{var con = "L";}
+else if(num < 2443 && num >= 1887)
+{var con = "S";}
+else if(num < 1887 && num >= 1400)
+{var con = "Z";}
+else if(num < 1400 && num >= 982)
+{var con = "C";}
+else if(num < 982 && num >= 633)
+{var con = "J";}
+else if(num < 633 && num >= 353)
+{var con = "F";}
+else if(num < 353 && num >= 142)
+{var con = "V";}
+else if(num < 142 && num >= 0)
+{var con = "R";}
+else{alert("NaN!");}
+
+if(num2 > 9240)
+{var vow = "A'I";}
+else if(num2 < 9240 && num2 >= 8510)
+{var vow = "A'U";}
+else if(num2 < 8510 && num2 >= 7810)
+{var vow = "I'A";}
+else if(num2 < 7810 && num2 >= 7140)
+{var vow = "I'U";}
+else if(num2 < 7140 && num2 >= 6500)
+{var vow = "U'A";}
+else if(num2 < 6500 && num2 >= 5890)
+{var vow = "U'I";}
+else if(num2 < 5890 && num2 >= 5310)
+{var vow = "A'A";}
+else if(num2 < 5310 && num2 >= 4760)
+{var vow = "I'I";}
+else if(num2 < 4760 && num2 >= 4240)
+{var vow = "U'U";}
+else if(num2 < 4240 && num2 >= 3750)
+{var vow = "E'I";}
+else if(num2 < 3750 && num2 >= 3290)
+{var vow = "I'E";}
+else if(num2 < 3290 && num2 >= 2860)
+{var vow = "O'I";}
+else if(num2 < 2860 && num2 >= 2460)
+{var vow = "I'O";}
+else if(num2 < 2460 && num2 >= 2060)
+{var vow = "E'U";}
+else if(num2 < 2060 && num2 >= 1690)
+{var vow = "U'E";}
+else if(num2 < 1690 && num2 >= 1350)
+{var vow = "O'U";}
+else if(num2 < 1350 && num2 >= 1070)
+{var vow = "U'O";}
+else if(num2 < 1070 && num2 >= 820)
+{var vow = "E'E";}
+else if(num2 < 820 && num2 >= 600)
+{var vow = "O'O";}
+else if(num2 < 600 && num2 >= 410)
+{var vow = "E'A";}
+else if(num2 < 410 && num2 >= 250)
+{var vow = "A'E";}
+else if(num2 < 250 && num2 >= 120)
+{var vow = "O'A";}
+else if(num2 < 120 && num2 >= 80)
+{var vow = "A'O";}
+else if(num2 < 80 && num2 >= 40)
+{var vow = "E'O";}
+else if(num2 < 40 && num2 >= 0)
+{var vow = "O'E";}
+else{alert("NaN!");}
+
+sandbox.innerHTML = con + vow;}
+
+</script>
+
+</div>
+</code>
+</body>
+</html>
+
+
+
