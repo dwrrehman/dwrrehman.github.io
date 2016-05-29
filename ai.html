@@ -12,7 +12,7 @@ p:last-child{ color: black;}
 *:focus{outline:none;}
 </style><title>ai</title><script src="jquery-1.12.3.js"></script><script>
 
-var users = {"deniylreimn":"me","guest":"password", "root":"root"};
+var users = {"dwrrehman":"me","guest":"password", "root":"root"};
 var currentuser = '';
 var conversation = [];
 var previouscode = [];
@@ -28,6 +28,10 @@ var maxwordlength = 4;
 var disabled = false;
 var responsedelay = 100;
 
+function encoder(){}
+function decoder(){}
+function brain(){}
+
 function speak(){
 	if (disabled==false){
 	var speech = document.getElementById("speech").value;
@@ -36,7 +40,7 @@ function speak(){
 function check(speech){
 	var parsedspeech = prune(speech);
 	if(parsedspeech == "u"){
-		var newwindow = window.open('au.html', '_blank', "resizable=1,height=10,width=10,left=500,top=150,location=0");
+		var newwindow = window.open('au.html', '_blank', "resizable=1,height=100%,width=100%,location=0");
 		newwindow.document.write("<span style='padding-left: 20px; font-size: 20px;font-family:monospace;'><b>&#10095; au .u<b></span>");
 		self.close();}
 	else if(speech == "x")
@@ -144,7 +148,7 @@ function execute(command){
 	else if(command == "hide")
 			 hideall();
 	else if(command == "home")
-			 window.location.href = 'deniylreimn.github.io';
+			 window.location.href = 'dwrrehman.github.io';
 	else if(command == ""){}
     else if(command == ""){}
 	else alert("command not found.");}
@@ -152,23 +156,22 @@ function execute(command){
 function display(array){
 	var newwindow = window.open('display.html', '_blank', "scrollbars=1,resizable=1,height=500,width=500");
 	for (i=0; i<array.length; i++){
-		if (array[i] == ""){}else if((i+1)%2==0){
-			newwindow.document.write("<span style='padding-left: 20px; font-size: 20px; font-family:monospace;'><b>&nbsp;&nbsp;"+array[i]+"<b></span><br><br>");}
-		else{newwindow.document.write("<span style='padding-left: 20px; font-size: 20px; font-family:monospace;'><b>"+array[i]+"<b></span><br><br>");}}}
+		if (array[i] == ""){}else if((i+1)%2==0)
+			newwindow.document.write("<span style='padding-left: 20px; font-size: 20px; font-family:monospace;'><b>&nbsp;&nbsp;"+array[i]+"<b></span><br><br>");
+		else newwindow.document.write("<span style='padding-left: 20px; font-size: 20px; font-family:monospace;'><b>"+array[i]+"<b></span><br><br>");}}
 			
 function includes(string,substring){
 	return string.indexOf(substring) != -1}
 	
 function parse(rawtext){
 	var sentence_string = '';
-	var sentence_array = [];
+	var sentence_array = [".o", ".a", ".i"];
 	var labeled_sentence_array = [];
 	var strings_insentence = [];
 	
 	function convert_array_to_string(array){
 		var string = '';
-		for (i=0;i<array.length;i++){
-			string += array[i]+" ";}
+		for (i=0;i<array.length;i++)string += array[i]+" ";
 		return string;}
 			
 	function Su(input){
@@ -181,12 +184,12 @@ function parse(rawtext){
 				strings_insentence.push(input1);
 				var input2 = "su." + input1 + ".";
 				input = input.replace(input2, ".STR.");}
-			return input;}
-		else{return input;}}
+			return input}
+		else return input}
 
 	function lexer(input){
 		input = "." + input;
-		for(k=0;k<maxwordlength;k++){input = input + ".";}
+		for(k=0;k<maxwordlength;k++)input = input + ".";
 		var token = '';
 		var character = '';
 		for(i=0;i<input.length;i++){
@@ -204,11 +207,11 @@ function parse(rawtext){
 				else if(token.length>maxwordlength){
 					i -= maxwordlength;
 					token = '';
-					break;}}}
+					break}}}
 		sentence_string = convert_array_to_string(sentence_array);
-		return sentence_string;}
+		return sentence_string}
 
-	function labeler(input){
+	function labeler(){
 		var wordadded;
 		for (i=0;i<sentence_array.length;i++){
 			wordadded = false;
@@ -228,21 +231,265 @@ function parse(rawtext){
 					wordadded = true;
 					break;}}
 			if(wordadded == false){
-				labeled_sentence_array.push(["word", sentence_array[i]]);}}
-		console.log(labeled_sentence_array);
-		return input}
+				labeled_sentence_array.push(["word", sentence_array[i]]);}}}
 
-	function parser(input){
-	var text = []
-	}
+	function parser(){
+		console.log(sentence_array);
+			var tree = [];
+			var next = -1;
+
+			function isrightword(token){
+				next++;
+				if (token == sentence_array[next]) return true;
+				else{next--;return false;}}
+
+			function speech(){
+				var save = next;
+				console.log("speech");
+				if (sentences()) return true;
+				next = save;
+				if (focuses()) return true;
+				next = save;
+				if (mindsets()) return true;
+				else return false;}
+
+			function mindsets(){
+				var save = next;
+				console.log("mindsets");
+				if (isrightword(".o") && mindset() &&  mindsettail()) return true;
+				next = save;
+				if (isrightword(".o") && mindset()) return true;
+				else return false;}
+
+			function mindsettail(){
+				console.log("mindsettail");
+				return mindsets();}
+
+			function mindset(){
+				var save = next;
+				console.log("mindset");
+				if (sentences()) return true;
+				next = save;
+				if (focuses()) return true;
+				else return false;}
+
+			function focuses(){
+				var save = next;
+				console.log("focuses");
+				if (isrightword(".a") && focus() &&  focustail()) return true;
+				next = save;
+				if (isrightword(".a") && focus()) return true;
+				else return false;}
+
+			function focustail(){
+				console.log("focustail");
+				return focuses();}
+
+			function focus(){
+				console.log("focus");
+				return sentences();}
+
+			function sentences(){
+				var save = next;
+				console.log("sentences");
+				if (isrightword(".i") && sentence() && sentencetail()) return true;
+				next = save;
+				if (isrightword(".i") && sentence()) return true;
+				else return false;}
+
+			function sentencetail(){
+				console.log("sentencetail");
+				return sentences();}
+
+			function sentence(){
+				var save = next;
+				console.log("sentence");
+				if (proposition() && subpropositions()) return true;
+				next = save;
+				if (proposition()) return true;
+				else return false;}
+
+			function proposition(){
+				var save = next;
+				console.log("proposition");
+				if (objects() && predicate() && objects()) return true;
+				next = save;
+				if (objects() && predicate()) return true;
+				next = save;
+				if (predicate() && objects()) return true;
+				next = save;
+				if (predicate()) return true;
+				else return false;}
+
+			function subpropositions(){
+				var save = next;
+				console.log("subpropositions");
+				if (isrightword(".e") && subproposition() && subpropositiontail()) return true;
+				next = save;
+				if (isrightword(".e") && subproposition()) return true;
+				else return false;}
+
+			function subpropositiontail(){
+				console.log("subpropositiontail");
+				return subpropositions();}
+
+			function subproposition(){
+				var save = next;
+				console.log("subproposition");
+				if (predicate() && objects()) return true;
+				next = save;
+				if (predicate()) return true;
+				else return false;}
+
+			function objects(){
+				var save = next;
+				console.log("objects");
+				if (object1() && objecttail()) return true;
+				next = save;
+				if (object1()) return true;
+				else return false;}
+
+			function objecttail(){
+				console.log("objecttail");
+				return objects();}
+
+			function object1(){
+				var save = next;
+				console.log("object1");
+				if (object() && isrightword("sa") && object()) return true;
+				next = save;
+				if (object() && isrightword("ca") && sentence() && isrightword("ni")) return true;
+				next = save;
+				if (object())return true;
+				else return false;}
+
+			function object(){
+				var save = next;
+				console.log("object");
+				if(isrightword("da") && predicate() && isrightword("ni")) return true;
+				next = save;
+				if(isrightword("da") && numeral() && isrightword("ni")) return true;
+				next = save;
+				if(isrightword("ta") && sentence() && isrightword("ni")) return true;
+				next = save;
+				if (nativeobject()) return true;
+				else return false;}
+
+			function nativeobject(){
+				var save = next;
+				console.log("nativeobject");
+				if (isrightword("mi")) return true;
+				next = save;
+				if (isrightword("pa")) return true;
+				next = save;
+				if (isrightword("fu")) return true;
+				next = save;
+				if (isrightword("ti")) return true;
+				next = save;
+				if (isrightword("ki")) return true;
+				next = save;
+				if (isrightword("STR")) return true;
+				else return false;}
+
+			function predicate(){
+				var save = next;
+				console.log("predicate");
+				if (predicate1() && isrightword("sa") && predicate1()) return true;
+				next = save;
+				if (predicate1() && isrightword("fa") && objects() && isrightword("ni")) return true;
+				next = save;
+				if (predicate1()) return true;
+				else return false;}
+
+			function predicate1(){
+				var save = next;
+				console.log("predicate1");
+				if (nativepredicate() && predicatetail()) return true;
+				next = save;
+				if (nativepredicate()) return true;
+				else return false;}
+
+			function predicatetail(){
+				var save = next;
+				console.log("predicatetail");
+            	if (numeral() && isrightword("ma") && numeral() && predicate1()) return true;
+            	next = save;
+				if (numeral() && isrightword("ma") && predicate1()) return true;
+            	next = save;
+				if (isrightword("ma") && numeral() && predicate1()) return true;
+            	next = save;
+				if (isrightword("ma") && predicate1()) return true;
+            	next = save;
+				if (predicate1()) return true;
+				else return false;}
+
+			function nativepredicate(){
+				var save = next;
+				console.log("nativepredicate");
+				if (isrightword("teu")) return true;
+				next = save;
+				if (isrightword("pau")) return true;
+				next = save;
+				if (isrightword("bau")) return true;
+				next = save;
+				if (isrightword("pai")) return true;
+				next = save;
+				if (isrightword("reu")) return true;
+				else return false;}
+
+			function numeral(){
+				var save = next;
+				console.log("numeral");
+				if (nativenumeral() && numeraltail()) return true;
+				next = save;
+				if (nativenumeral()) return true;
+				else return false;}
+
+			function numeraltail(){
+				console.log("numeraltail");
+				return numeral();}
+
+			function nativenumeral(){
+				var save = next;
+				console.log("nativenumeral");
+				if (isrightword("no")) return true;
+				next = save;
+				if (isrightword("pi")) return true;
+				next = save;
+				if (isrightword("tu")) return true;
+				next = save;
+				if (isrightword("ka")) return true;
+				next = save;
+				if (isrightword("fe")) return true;
+				next = save;
+				if (isrightword("fe")) return true;
+				next = save;
+				if (isrightword("so")) return true;
+				next = save;
+				if (isrightword("di")) return true;
+				next = save;
+				if (isrightword("gu")) return true;
+				next = save;
+				if (isrightword("va")) return true;
+				next = save;
+				if (isrightword("be")) return true;
+				else return false;}
+
+	return speech() && ++next == sentence_array.length;}
 
 	var parsedinput = prune(rawtext);
 		parsedinput = U(parsedinput);
 		parsedinput = Su(parsedinput);
 		parsedinput = lexer(parsedinput);
-		parsedinput = labeler(parsedinput);
-	if(parsedinput == ""){alert("ka pau du");}
-	return parsedinput;}
+	if(parsedinput == "")alert("ka pau du");
+
+	labeler();
+
+	if (parser()) alert("parse succeeded.");
+	else alert("parse failed.");
+
+	return parsedinput;
+	}
 
 function deletedots(input){
 	input = input.replace(/\.{2,}/g, ".");
@@ -276,9 +523,14 @@ function U(input){
 		return input;}}
 
 function respond(input){
-	var parsedinput = parse(input);
 
-	return parsedinput;}
+	var parsedtree = parse(input);
+	var bitarray = encoder(parsedtree);
+	var response_bitarray = brain(bitarray);
+	var response  = decoder(response_bitarray);
+	return parsedtree;
+	//return response;
+	}
 	
 function print(response, speech){
 	if(response != "" && speech != ""){
