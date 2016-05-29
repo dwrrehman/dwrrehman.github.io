@@ -165,7 +165,7 @@ function includes(string,substring){
 	
 function parse(rawtext){
 	var sentence_string = '';
-	var sentence_array = [".o", ".a", ".i"];
+	var sentence_array = [".i"];
 	var labeled_sentence_array = [];
 	var strings_insentence = [];
 	
@@ -234,7 +234,6 @@ function parse(rawtext){
 				labeled_sentence_array.push(["word", sentence_array[i]]);}}}
 
 	function parser(){
-		console.log(sentence_array);
 			var tree = [];
 			var next = -1;
 
@@ -245,7 +244,6 @@ function parse(rawtext){
 
 			function speech(){
 				var save = next;
-				console.log("speech");
 				if (sentences()) return true;
 				next = save;
 				if (focuses()) return true;
@@ -255,19 +253,16 @@ function parse(rawtext){
 
 			function mindsets(){
 				var save = next;
-				console.log("mindsets");
 				if (isrightword(".o") && mindset() &&  mindsettail()) return true;
 				next = save;
 				if (isrightword(".o") && mindset()) return true;
 				else return false;}
 
 			function mindsettail(){
-				console.log("mindsettail");
 				return mindsets();}
 
 			function mindset(){
 				var save = next;
-				console.log("mindset");
 				if (sentences()) return true;
 				next = save;
 				if (focuses()) return true;
@@ -275,35 +270,29 @@ function parse(rawtext){
 
 			function focuses(){
 				var save = next;
-				console.log("focuses");
 				if (isrightword(".a") && focus() &&  focustail()) return true;
 				next = save;
 				if (isrightword(".a") && focus()) return true;
 				else return false;}
 
 			function focustail(){
-				console.log("focustail");
 				return focuses();}
 
 			function focus(){
-				console.log("focus");
 				return sentences();}
 
 			function sentences(){
 				var save = next;
-				console.log("sentences");
 				if (isrightword(".i") && sentence() && sentencetail()) return true;
 				next = save;
 				if (isrightword(".i") && sentence()) return true;
 				else return false;}
 
 			function sentencetail(){
-				console.log("sentencetail");
 				return sentences();}
 
 			function sentence(){
 				var save = next;
-				console.log("sentence");
 				if (proposition() && subpropositions()) return true;
 				next = save;
 				if (proposition()) return true;
@@ -311,7 +300,6 @@ function parse(rawtext){
 
 			function proposition(){
 				var save = next;
-				console.log("proposition");
 				if (objects() && predicate() && objects()) return true;
 				next = save;
 				if (objects() && predicate()) return true;
@@ -323,19 +311,16 @@ function parse(rawtext){
 
 			function subpropositions(){
 				var save = next;
-				console.log("subpropositions");
 				if (isrightword(".e") && subproposition() && subpropositiontail()) return true;
 				next = save;
 				if (isrightword(".e") && subproposition()) return true;
 				else return false;}
 
 			function subpropositiontail(){
-				console.log("subpropositiontail");
 				return subpropositions();}
 
 			function subproposition(){
 				var save = next;
-				console.log("subproposition");
 				if (predicate() && objects()) return true;
 				next = save;
 				if (predicate()) return true;
@@ -343,19 +328,16 @@ function parse(rawtext){
 
 			function objects(){
 				var save = next;
-				console.log("objects");
 				if (object1() && objecttail()) return true;
 				next = save;
 				if (object1()) return true;
 				else return false;}
 
 			function objecttail(){
-				console.log("objecttail");
 				return objects();}
 
 			function object1(){
 				var save = next;
-				console.log("object1");
 				if (object() && isrightword("sa") && object()) return true;
 				next = save;
 				if (object() && isrightword("ca") && sentence() && isrightword("ni")) return true;
@@ -365,7 +347,6 @@ function parse(rawtext){
 
 			function object(){
 				var save = next;
-				console.log("object");
 				if(isrightword("da") && predicate() && isrightword("ni")) return true;
 				next = save;
 				if(isrightword("da") && numeral() && isrightword("ni")) return true;
@@ -377,7 +358,6 @@ function parse(rawtext){
 
 			function nativeobject(){
 				var save = next;
-				console.log("nativeobject");
 				if (isrightword("mi")) return true;
 				next = save;
 				if (isrightword("pa")) return true;
@@ -393,7 +373,6 @@ function parse(rawtext){
 
 			function predicate(){
 				var save = next;
-				console.log("predicate");
 				if (predicate1() && isrightword("sa") && predicate1()) return true;
 				next = save;
 				if (predicate1() && isrightword("fa") && objects() && isrightword("ni")) return true;
@@ -403,7 +382,6 @@ function parse(rawtext){
 
 			function predicate1(){
 				var save = next;
-				console.log("predicate1");
 				if (nativepredicate() && predicatetail()) return true;
 				next = save;
 				if (nativepredicate()) return true;
@@ -411,7 +389,6 @@ function parse(rawtext){
 
 			function predicatetail(){
 				var save = next;
-				console.log("predicatetail");
             	if (numeral() && isrightword("ma") && numeral() && predicate1()) return true;
             	next = save;
 				if (numeral() && isrightword("ma") && predicate1()) return true;
@@ -425,7 +402,6 @@ function parse(rawtext){
 
 			function nativepredicate(){
 				var save = next;
-				console.log("nativepredicate");
 				if (isrightword("teu")) return true;
 				next = save;
 				if (isrightword("pau")) return true;
@@ -434,24 +410,21 @@ function parse(rawtext){
 				next = save;
 				if (isrightword("pai")) return true;
 				next = save;
-				if (isrightword("reu")) return true;
+				if (isrightword("beu")) return true;
 				else return false;}
 
 			function numeral(){
 				var save = next;
-				console.log("numeral");
 				if (nativenumeral() && numeraltail()) return true;
 				next = save;
 				if (nativenumeral()) return true;
 				else return false;}
 
 			function numeraltail(){
-				console.log("numeraltail");
 				return numeral();}
 
 			function nativenumeral(){
 				var save = next;
-				console.log("nativenumeral");
 				if (isrightword("no")) return true;
 				next = save;
 				if (isrightword("pi")) return true;
@@ -481,15 +454,11 @@ function parse(rawtext){
 		parsedinput = U(parsedinput);
 		parsedinput = Su(parsedinput);
 		parsedinput = lexer(parsedinput);
-	if(parsedinput == "")alert("ka pau du");
-
+	if(parsedinput == "") alert("ka pau du");
 	labeler();
 
-	if (parser()) alert("parse succeeded.");
-	else alert("parse failed.");
-
-	return parsedinput;
-	}
+	if (parser()){return true;}
+	else{alert("parse failed.");return "";}}
 
 function deletedots(input){
 	input = input.replace(/\.{2,}/g, ".");
@@ -523,14 +492,13 @@ function U(input){
 		return input;}}
 
 function respond(input){
-
 	var parsedtree = parse(input);
-	var bitarray = encoder(parsedtree);
-	var response_bitarray = brain(bitarray);
-	var response  = decoder(response_bitarray);
-	return parsedtree;
-	//return response;
-	}
+	if (parsedtree){
+		var bitarray = encoder(parsedtree);
+		var response_bitarray = brain(bitarray);
+		var response = decoder(response_bitarray);
+		//return response;
+	}return parsedtree;}
 	
 function print(response, speech){
 	if(response != "" && speech != ""){
