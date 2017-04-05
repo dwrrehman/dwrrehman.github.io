@@ -5,7 +5,10 @@
         <script>
             
             function myevaluate() {
-                window.eval(document.getElementById("text").value);
+                var newjs = document.getElementById("text").value;
+                window.eval(newjs);
+                document.getElementById("text").value.innerHTML = newjs;
+                console.log("executed successfully!");
             }
         
         </script>
