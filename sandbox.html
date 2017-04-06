@@ -4,37 +4,56 @@
         <title>sandbox</title>
         <script>
             
+            var debug = true;
+            
             function myevaluate() {
-                var newjs = document.getElementById("text").value;
-                window.eval(newjs);
-                document.getElementById("text").value.innerHTML = newjs;
-                console.log("executed successfully!");
+                window.eval(document.getElementById("text").value);
             }
         
-        </script>
+            function myclear() {
+                var text = document.getElementById("text").value;
+                
+                console.log(text);
+                document.getElementById("text").value = "";
+            }
         
+            function compile() {
+                
+                
+                
+                if (debug) {
+                    console.log("compile complete."); 
+                }
+            }
+            
+        
+        
+        
+        </script>
         <style>
+            
+            
             #text {
-                font-family: Courier;
-                font-size: 7 px;
+                font-family: Courier New;
+                font-size: 20px;
                 outline: none;
                 border: none;
                 width: 100%;
-                height: 700 px;
+                height: 700px;
             }
             
         </style>
-        
-        
     </head>
-
     <body>
         
-        
+        <button onclick="myevaluate()">evaluate</button>
+        <button onclick="compile()">compile</button>
+        <button onclick="myclear()">clear</button>
+        <hr>
         <textarea 
             id="text" 
             autofocus 
-            ondblclick="myevaluate()" 
             placeholder="code here."></textarea>
+        
     </body>
 </html>
