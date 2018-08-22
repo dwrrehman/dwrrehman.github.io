@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script type="text/javascript">
+			
+			function do_something() {
+				console.log("user focused!");
+			}
+
+			function do_somethingelse() {
+				console.log("user pressed a key!");
+			}
+
+		</script>
+	</head>
+	<body>
+		<textarea placeholder="hi there :)" onfocus="do_something();" onkeypress="do_somethingelse()">hello there, this is a test</textarea>
+	</body>
+</html>
