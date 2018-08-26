@@ -86,6 +86,13 @@
 					eval(files[commandlist[1]]);
 					return _return;
 
+				} else if (command == "list" || command == "ls") {
+					var result = "";
+					for (var i = 0; i < files.length; i++) {
+						result += files.keys[i] + "\n";
+					}
+					return result;
+
 				} else if (command == "clear" || command == "l") {
 					document.getElementById("text").innerHTML = "";	
 					return "";
@@ -149,11 +156,10 @@
 
 					// text mode:
 					} else if (!commandline_mode && (event.key == "Escape" || event.key == "~")) {						
-						files[file_being_edited] = document.getElementById("text").innerText;
+						files[file_being_edited] = document.getElementById("text").innerText.slice(0, document.getElementById("text").innerText.length-1);
 						commandline_mode = true;
 						document.getElementById("text").innerText = prompt_string;	
 						placeCaretAtEnd(document.getElementById("text"));
-
 					}
 				}, false);
 			}    		
