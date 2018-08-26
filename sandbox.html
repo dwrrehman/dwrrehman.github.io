@@ -21,7 +21,7 @@
 
     			width: 100%;
 				height : 100%;
-				max-height: 500px;				
+				max-height: 1000px;				
     			overflow: auto;
 			}
 
@@ -53,14 +53,14 @@
 			var _return;
 			var _parameters;
 
-			function interpret(commandstring) {
-				var commandlist = commandstring.split(' ');
+			function interpret(commandstring) {				
+				var commandlist = commandstring.trim().split(' ');
 				var command = commandlist[0];
 
 				if (command == "help" || command == "?") {
-					return "commands: edit, show, dump, delete, count, clear, help, execute.\n";
+					return "commands:\nedit(e) <file> \nlist(ls) \nshow(s) <files> \ndump(d) \ndelete <files> \ncount(c) <symbols> \nclear(l) \nhelp(?) \nexecute(x) <program>\n   Use \"~\" or Esc to exit the text editor.\n\n";
 
-				} else if (command == "edit") {
+				} else if (command == "edit" || command == "e") {
 					commandline_mode = false;
 					file_being_edited = commandlist[1];
 					var initial_data = "";
@@ -68,10 +68,11 @@
 					document.getElementById("text").innerText = initial_data;
 					return "";
 
-				} else if (command == "show") {
-					var result = "";
-					for (var i = 1; i < commandlist.length; i++) {						
-						result += files[commandlist[i]];
+				} else if (command == "show" || command == "s") {
+					var result = "";					
+					for (var i = 1; i < commandlist.length; i++) {
+						result += "showing " + commandlist[i] + ":\n";
+						result += files[commandlist[i]] + "\n\n";					
 					}
 					return result;
 				} else if (command == "delete") {
@@ -80,16 +81,18 @@
 					}
 					return "";
 
-				} else if (command == "execute") {
+				} else if (command == "execute" || command == "x") {
 					_return = "";
 					_parameters = commandlist;
 					eval(files[commandlist[1]]);
 					return _return;
 
-				} else if (command == "list" || command == "ls") {
+				} else if (command == "list" || command == "ls") {					
 					var result = "";
-					for (var i = 0; i < files.length; i++) {
-						result += files.keys[i] + "\n";
+					for (var i = 0; i < Object.keys(files).length; i++) {
+						if (files[Object.keys(files)[i]] != undefined) {
+							result += Object.keys(files)[i] + "\n";
+						}
 					}
 					return result;
 
@@ -97,10 +100,10 @@
 					document.getElementById("text").innerHTML = "";	
 					return "";
 
-				} else if (command == "count") {
-					return commandlist.length;
+				} else if (command == "count" || command == "c") {
+					return (commandlist.length - 1) + "\n";
 
-				} else if (command == "dump") {
+				} else if (command == "dump" || command == "d") {
 					return JSON.stringify(files) + "\n";
 
 				} else if (command == "") {
@@ -130,9 +133,9 @@
 			function on_focus() {
 				if (!has_focused_before) {
 					has_focused_before = true;
-					document.getElementById("text").innerHTML = welcome_message + "<br>" + prompt_string;	
-					placeCaretAtEnd(document.getElementById("text"));						
+					document.getElementById("text").innerHTML = welcome_message + "<br>" + prompt_string;						
 				}
+				placeCaretAtEnd(document.getElementById("text"));						
 			}
 
 			window.onload = function() {
@@ -148,18 +151,25 @@
 						var result = interpret(command);
 
 						// prompt again
-						document.getElementById("text").innerText = document.getElementById("text").innerText.slice(0, document.getElementById("text").innerText.length-1);
+						if (file_being_edited == "") {
+							document.getElementById("text").innerText = document.getElementById("text").innerText.slice(0, document.getElementById("text").innerText.length-1);
+						}
+
 						document.getElementById("text").innerText += result;
 						if (commandline_mode) 
 							document.getElementById("text").innerText += prompt_string;	
 						placeCaretAtEnd(document.getElementById("text"))
-
 					// text mode:
 					} else if (!commandline_mode && (event.key == "Escape" || event.key == "~")) {						
-						files[file_being_edited] = document.getElementById("text").innerText.slice(0, document.getElementById("text").innerText.length-1);
+						if (event.key == "~") {	
+							console.log("lopping off a bit of the file for its own good!");
+							document.getElementById("text").innerText = document.getElementById("text").innerText.slice(0, document.getElementById("text").innerText.length-1);						
+						}
+						files[file_being_edited] = document.getElementById("text").innerText;
 						commandline_mode = true;
 						document.getElementById("text").innerText = prompt_string;	
 						placeCaretAtEnd(document.getElementById("text"));
+						file_being_edited = "";
 					}
 				}, false);
 			}    		
