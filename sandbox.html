@@ -1,19 +1,173 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<style type="text/css">
+		
+			#container {
+				width: screen.width;
+				height: screen.height;				
+				border: none;
+				margin: 0 auto;				
+			}
+
+			#text{
+    			border: none;
+				color: #3AFD33;	
+				font-family: Menlo;
+				font-size: large;	
+				font-weight: lighter;			
+				background-color: transparent;	
+				caret-color: #3AFD33;
+
+    			width: 100%;
+				height : 100%;
+				max-height: 500px;				
+    			overflow: auto;
+			}
+
+			*:focus {
+    			outline: none;
+			}
+
+			html, body {
+				padding:0; 
+				margin:0;
+				background: black;
+			}
+		</style>
+
 		<script type="text/javascript">
 			
-			function do_something() {
-				console.log("user focused!");
+			var prompt_emblem = "::";
+
+			var welcome_message = "This is a Command Line Interface For Daniel's Website. <br>type \"?\" for more info.";
+
+			var commandline_mode = true;
+			var has_focused_before = false;			
+			var prompt_string = prompt_emblem + String.fromCharCode(160);			
+			var last_target;
+			var files = new Object();
+			var file_being_edited = "";
+
+			// stubs for executed javscript to use to interact with the terminal.
+			var _return;
+			var _parameters;
+
+			function interpret(commandstring) {
+				var commandlist = commandstring.split(' ');
+				var command = commandlist[0];
+
+				if (command == "help" || command == "?") {
+					return "commands: edit, show, dump, delete, count, clear, help, execute.\n";
+
+				} else if (command == "edit") {
+					commandline_mode = false;
+					file_being_edited = commandlist[1];
+					var initial_data = "";
+					if (files[commandlist[1]] != undefined) initial_data = files[commandlist[1]];
+					document.getElementById("text").innerText = initial_data;
+					return "";
+
+				} else if (command == "show") {
+					var result = "";
+					for (var i = 1; i < commandlist.length; i++) {						
+						result += files[commandlist[i]];
+					}
+					return result;
+				} else if (command == "delete") {
+					for (var i = 1; i < commandlist.length; i++) {						
+						files[commandlist[i]] = undefined;
+					}
+					return "";
+
+				} else if (command == "execute") {
+					_return = "";
+					_parameters = commandlist;
+					eval(files[commandlist[1]]);
+					return _return;
+
+				} else if (command == "clear" || command == "l") {
+					document.getElementById("text").innerHTML = "";	
+					return "";
+
+				} else if (command == "count") {
+					return commandlist.length;
+
+				} else if (command == "dump") {
+					return JSON.stringify(files) + "\n";
+
+				} else {
+					return "?\n";
+				}				
 			}
 
-			function do_somethingelse() {
-				console.log("user pressed a key!");
+			function placeCaretAtEnd(el) {
+    			el.focus();
+    			if (typeof window.getSelection != "undefined" && typeof document.createRange != "undefined") {
+        			var range = document.createRange();
+        			range.selectNodeContents(el);
+        			range.collapse(false);
+        			var sel = window.getSelection();
+        			sel.removeAllRanges();
+        			sel.addRange(range);
+    			} else if (typeof document.body.createTextRange != "undefined") {
+        			var textRange = document.body.createTextRange();
+        			textRange.moveToElementText(el);
+        			textRange.collapse(false);
+        			textRange.select();
+    			}
 			}
 
+			function on_focus() {
+				if (!has_focused_before) {
+					has_focused_before = true;
+					document.getElementById("text").innerHTML = welcome_message + "<br>" + prompt_string;	
+					placeCaretAtEnd(document.getElementById("text"));						
+				}
+			}
+
+			window.onload = function() {
+				document.addEventListener('keyup', function(event) { 					
+					var last_character_in_text = document.getElementById("text").innerText.slice(-1);
+
+					// command line mode:
+					if (commandline_mode && event.key == "Enter" && last_character_in_text == "\n") {
+						// get command:
+						var start_index = document.getElementById("text").innerText.lastIndexOf(prompt_emblem) + prompt_emblem.length + 1;
+						var end_index = document.getElementById("text").innerText.length - 2;
+						var command = document.getElementById("text").innerText.slice(start_index, end_index);					
+						var result = interpret(command);
+
+						// prompt again
+						document.getElementById("text").innerText = document.getElementById("text").innerText.slice(0, document.getElementById("text").innerText.length-1);
+						document.getElementById("text").innerText += result;
+						if (commandline_mode) 
+							document.getElementById("text").innerText += prompt_string;	
+						placeCaretAtEnd(document.getElementById("text"))
+
+					// text mode:
+					} else if (!commandline_mode && event.key == "Escape") {						
+						files[file_being_edited] = document.getElementById("text").innerText;
+						commandline_mode = true;
+						document.getElementById("text").innerText = prompt_string;	
+						placeCaretAtEnd(document.getElementById("text"));
+
+					}
+				}, false);
+			}    		
+	
 		</script>
 	</head>
 	<body>
-		<textarea placeholder="hi there :)" onfocus="do_something();" onkeypress="do_somethingelse()">hello there, this is a test</textarea>
+		<div id="container">			
+			<div 
+				id="text" 
+				contenteditable="true" 
+				onfocus="on_focus();" 				
+				autocomplete="off" 
+				autocorrect="off" 
+				autocapitalize="off" 
+				spellcheck="false">click me</div>						
+		</div>
 	</body>
 </html>
