@@ -148,7 +148,7 @@
 						placeCaretAtEnd(document.getElementById("text"))
 
 					// text mode:
-					} else if (!commandline_mode && (event.key == "Escape" || event.key == "~") {						
+					} else if (!commandline_mode && (event.key == "Escape" || event.key == "~")) {						
 						files[file_being_edited] = document.getElementById("text").innerText;
 						commandline_mode = true;
 						document.getElementById("text").innerText = prompt_string;	
