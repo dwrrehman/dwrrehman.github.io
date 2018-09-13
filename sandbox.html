@@ -41,10 +41,9 @@
 			var manuals = {
 				"help": "simply type help, and read the help menu. not that complicated.", 
 				"edit": "edits a file on the file system. _return is used in js code to print something to the screen. _parameters is used to access the list of strings passed into the program, when executed.",
-				"list": "lists the files in the current directory.",				
-				"change": "changes directory"
+				"list": "lists the files in the current directory, or contents of a file.",				
+				"change": "changes current directory",
 				"pwd": "prints the current directory you are in.",
-				"show": "show the data in a particular set of files given.",
 				"delete": "deletes a set of files, or directories.",
 				"execute": "executes a file, as javascript code. uses _return, and _parameters, to do input and output."
 			}	
@@ -57,16 +56,15 @@
 			var has_focused_before = false;			
 			var last_target;
 			var file_being_edited = "";
+			var filepath_being_edited = "";
 
-			function file(filepath, filename, filedata) {								
+			function file(filename, filedata) {								
 				this.filename = filename;
 				this.filedata = filedata;
 			}
 
 			var files = new Object(); // array of all files.
 			
-
-
 
 			function prompt_string() {
 				return prompt_begin + current_directory + prompt_emblem + String.fromCharCode(160);			
@@ -87,59 +85,66 @@
 				} else if (command == "edit" || command == "e") {
 					commandline_mode = false;
 					file_being_edited = commandlist[1];
+					filepath_being_edited = current_directory + file_being_edited + "/";
 					var initial_data = "";
-					if (files[commandlist[1]] != undefined) initial_data = files[commandlist[1]];
+					if (files[filepath_being_edited] === undefined) {
+						files[current_directory].filedata += file_being_edited + "\n";
+					} else {
+						initial_data = files[filepath_being_edited];
+					}					
 					document.getElementById("text").innerText = initial_data;
 					return "";
 
-				} else if (command == "show" || command == "s") {
-					var result = "";					
-					for (var i = 1; i < commandlist.length; i++) {						
-						result += files[commandlist[i]];					
-					}
-					return result;
-				} else if (command == "delete") {
-					for (var i = 1; i < commandlist.length; i++) {						
-						files[commandlist[i]] = undefined;
-					}
+				} else if (command == "delete") {										
+					files[current_directory + commandlist[1] + "/"] = undefined;
 					return "";
 
 				} else if (command == "execute" || command == "x") {
 					_return = "";
 					_parameters = commandlist;
-					eval(files[commandlist[1]]);
+					eval(files[current_directory + commandlist[1] + "/"].filedata);
 					return _return;
 
 				} else if (command == "change" || command == "cd") {
 
 					if (commandlist[1] == ".." && current_directory != "/") {
-
 						var index = current_directory.subtring(0, current_directory.length - 1).lastIndexOf("/");
 						current_directory = current_directory.subtring(0, index);
 
-					} else if (commandlist[1] == ".") {						
+					} else if (commandlist[1] == ".") {		
+
 					} else {						
 						var directory_exists = false;
-						for (var i = 0; i < Object.keys(files).length; i++) {
-							if (Object.keys(files)[i] == commandlist[1]) {
+						var files_in_current_directory = files[current_directory].filedata.split('\n');
+						for (var i = 0; i < files_in_current_directory.length; i++) {
+							if (files_in_current_directory[i] == commandlist[1] && files[current_directory + files_in_current_directory[i]] != undefined) {
 								directory_exists = true;
 							}
 						}
 						if (directory_exists) 
-							current_directory += commandlist[1] + "/";						
+							current_directory += commandlist[1] + "/";	 // only relative movement through fs.			
 					}
+					return "";
 
 				} else if (command == "pwd" || command == "p") {
 					return current_directory + "\n";					
 
-				} else if (command == "list" || command == "ls") {					
-					var result = "";
-					for (var i = 0; i < Object.keys(files).length; i++) {
-						if (files[Object.keys(files)[i]] != undefined) {
-							result += Object.keys(files)[i] + "\n";
-						}
+
+				} else if (command == "man" || command == "m") {
+					if (manuals[commandlist[1]] != undefined) {
+						return manuals[commandlist[1]] + "\n";
+					} else {
+						return "";
 					}
-					return result;
+				} else if (command == "list" || command == "ls") {
+					if (commandlist[1] != undefined) {
+						if (files[current_directory + commandlist[1]].filedata != undefined) {
+							return files[current_directory + commandlist[1]].filedata;
+						}
+					} else {
+						return files[current_directory].filedata;
+					}
+					return "";
 
 				} else if (command == "clear" || command == "l") {
 					document.getElementById("text").innerHTML = "";	
@@ -179,6 +184,7 @@
 			function on_focus() {
 				if (!has_focused_before) {
 					has_focused_before = true;
+					files["/"] = new file("", "");
 					document.getElementById("text").innerHTML = welcome_message + "<br>" + prompt_string();		
 				}
 				placeCaretAtEnd(document.getElementById("text"));						
@@ -210,10 +216,11 @@
 					// text mode:
 					} else if (!commandline_mode && (event.key == "Escape" || event.key == "~")) {						
 						if (event.key == "~") {	
-							console.log("lopping off a bit of the file for its own good!");
 							document.getElementById("text").innerText = document.getElementById("text").innerText.slice(0, document.getElementById("text").innerText.length-1);						
 						}
-						files[file_being_edited] = document.getElementById("text").innerText;
+
+
+						files[filepath_being_edited] = new file(file_being_edited, document.getElementById("text").innerText);
 						commandline_mode = true;
 						document.getElementById("text").innerText = prompt_string();	
 						placeCaretAtEnd(document.getElementById("text"));
