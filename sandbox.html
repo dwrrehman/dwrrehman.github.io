@@ -37,17 +37,41 @@
 		</style>
 
 		<script type="text/javascript">
-			
-			var prompt_emblem = "::";
 
+			var manuals = {
+				"help": "simply type help, and read the help menu. not that complicated.", 
+				"edit": "edits a file on the file system. _return is used in js code to print something to the screen. _parameters is used to access the list of strings passed into the program, when executed.",
+				"list": "lists the files in the current directory.",				
+				"change": "changes directory"
+				"pwd": "prints the current directory you are in.",
+				"show": "show the data in a particular set of files given.",
+				"delete": "deletes a set of files, or directories.",
+				"execute": "executes a file, as javascript code. uses _return, and _parameters, to do input and output."
+			}	
+
+			var prompt_begin = ":";
+			var prompt_emblem = ":>";
+			var current_directory = "/";
 			var welcome_message = "This is a Command Line Interface For Daniel's Website. <br>type \"?\" for more info.";
-
 			var commandline_mode = true;
 			var has_focused_before = false;			
-			var prompt_string = prompt_emblem + String.fromCharCode(160);			
 			var last_target;
-			var files = new Object();
 			var file_being_edited = "";
+
+			function file(filepath, filename, filedata) {								
+				this.filename = filename;
+				this.filedata = filedata;
+			}
+
+			var files = new Object(); // array of all files.
+			
+
+
+
+			function prompt_string() {
+				return prompt_begin + current_directory + prompt_emblem + String.fromCharCode(160);			
+			}
+
 
 			// stubs for executed javscript to use to interact with the terminal.
 			var _return;
@@ -58,7 +82,7 @@
 				var command = commandlist[0];
 
 				if (command == "help" || command == "?") {
-					return "commands:\nedit(e) <file> \nlist(ls) \nshow(s) <files> \ndump(d) \ndelete <files> \ncount(c) <symbols> \nclear(l) \nhelp(?) \nexecute(x) <program>\n   Use \"~\" or Esc to exit the text editor.\n\n";
+					return "commands:\nedit(e) <file> \nlist(ls) \nshow(s) <files> \ndump(d) \ndelete <files> \ncount(c) <symbols> \nclear(l) \nman(m) <command> \nhelp(?) \nexecute(x) <program>\n   Use \"~\" or Esc to exit the text editor.\n\n";
 
 				} else if (command == "edit" || command == "e") {
 					commandline_mode = false;
@@ -70,9 +94,8 @@
 
 				} else if (command == "show" || command == "s") {
 					var result = "";					
-					for (var i = 1; i < commandlist.length; i++) {
-						result += "showing " + commandlist[i] + ":\n";
-						result += files[commandlist[i]] + "\n\n";					
+					for (var i = 1; i < commandlist.length; i++) {						
+						result += files[commandlist[i]];					
 					}
 					return result;
 				} else if (command == "delete") {
@@ -86,6 +109,28 @@
 					_parameters = commandlist;
 					eval(files[commandlist[1]]);
 					return _return;
+
+				} else if (command == "change" || command == "cd") {
+
+					if (commandlist[1] == ".." && current_directory != "/") {
+
+						var index = current_directory.subtring(0, current_directory.length - 1).lastIndexOf("/");
+						current_directory = current_directory.subtring(0, index);
+
+					} else if (commandlist[1] == ".") {						
+					} else {						
+						var directory_exists = false;
+						for (var i = 0; i < Object.keys(files).length; i++) {
+							if (Object.keys(files)[i] == commandlist[1]) {
+								directory_exists = true;
+							}
+						}
+						if (directory_exists) 
+							current_directory += commandlist[1] + "/";						
+					}
+
+				} else if (command == "pwd" || command == "p") {
+					return current_directory + "\n";					
 
 				} else if (command == "list" || command == "ls") {					
 					var result = "";
@@ -101,7 +146,8 @@
 					return "";
 
 				} else if (command == "count" || command == "c") {
-					return (commandlist.length - 1) + "\n";
+					if (files[commandlist[1]] != undefined)
+						return (files[commandlist[1]].length) + "\n";
 
 				} else if (command == "dump" || command == "d") {
 					return JSON.stringify(files) + "\n";
@@ -133,7 +179,7 @@
 			function on_focus() {
 				if (!has_focused_before) {
 					has_focused_before = true;
-					document.getElementById("text").innerHTML = welcome_message + "<br>" + prompt_string;						
+					document.getElementById("text").innerHTML = welcome_message + "<br>" + prompt_string();		
 				}
 				placeCaretAtEnd(document.getElementById("text"));						
 			}
@@ -157,8 +203,10 @@
 
 						document.getElementById("text").innerText += result;
 						if (commandline_mode) 
-							document.getElementById("text").innerText += prompt_string;	
+							document.getElementById("text").innerText += prompt_string();	
+
 						placeCaretAtEnd(document.getElementById("text"))
+
 					// text mode:
 					} else if (!commandline_mode && (event.key == "Escape" || event.key == "~")) {						
 						if (event.key == "~") {	
@@ -167,7 +215,7 @@
 						}
 						files[file_being_edited] = document.getElementById("text").innerText;
 						commandline_mode = true;
-						document.getElementById("text").innerText = prompt_string;	
+						document.getElementById("text").innerText = prompt_string();	
 						placeCaretAtEnd(document.getElementById("text"));
 						file_being_edited = "";
 					}
