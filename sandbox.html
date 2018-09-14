@@ -43,24 +43,25 @@
 			things to do:
 
 				- make the delete command work
-				- make th3 count command work 				
+				- make a mv move command to reanme and relocate files.
 				- allow sudo, and permissons
-				- 
+				- allow cd commands to use absolule locations too.			
+				- save the screeens commandss whe the user exits the editor and returns tot he command line interface. dontjsut clear ther ssceeen.
+
 			*/
 
 
-
-
-
-			var manuals = {
-				"help": "simply type help, and read the help menu. not that complicated.", 
-				"edit": "edits a file on the file system. _return is used in js code to print something to the screen. _parameters is used to access the list of strings passed into the program, when executed.",
-				"list": "lists the files in the current directory, or contents of a file.",				
-				"change": "changes current directory",
-				"pwd": "prints the current directory you are in.",
-				"delete": "deletes a set of files, or directories.",
-				"execute": "executes a file, as javascript code. uses _return, and _parameters, to do input and output."
-			}	
+			var manuals = {				
+				"help": "a utility which displays helpeful text describing a given command. if no command is given, it just displays the help menu or available commands.", 
+				"edit": "edits a file or directory on the file system, and creates it if it doesnt exist. use the Esc key or '~' key to exit the editor. this command can also be used to make an empty directory, by simply making an empty file. note, content is saved automatically upon exit. ",
+				"list": "lists the contents in a directory, or the contents of a file. lists the files in the current directory, if nothing is given. ",								
+				"change": "changes current directory to the directory given. if none is given, the root directory is assumed.",
+				"pwd": "prints the current full directory you are in.",
+				"remove": "deletes a file or directory, by setting its data to undefined. if a directory is given, all of its contents are deleted as well.",
+				"execute": "executes a file, as javascript code. the identifier '_return' is used in the code to print something to the screen. '_parameters' is used to access the list of strings passed into the program, when executed. _parameters[0] is the command that was executed, _parameters[1] is the name of the program, and _parameters[2] is the first actual parameter.",
+				"dump": "outputs the current state of the entire filesystem as a JSON string. this is used debug, as well as save the filesystem externally, and then reload it again with the init command.",
+				"init": "reinitialize the whole filesystem by setting it equal to javascript object obtained by parsing the JSON string given."
+			}
 
 			var prompt_begin = ":";
 			var prompt_emblem = ":>";
@@ -77,106 +78,202 @@
 				this.filedata = filedata;
 			}
 
-			var files = new Object(); // array of all files.
+			var files = new Object(); 
+			var fs = {"/":{"filename":"/","filedata":""}};
 			
 
 			function prompt_string() {
-				return prompt_begin + current_directory + prompt_emblem + String.fromCharCode(160);			
+				var directory = current_directory.slice(0, current_directory.length-1);
+				var index = directory.lastIndexOf("/");				
+				directory = directory.slice(index+1);				
+				return prompt_begin + directory + prompt_emblem + String.fromCharCode(160);			
+			}
+
+			function load(string) {
+				var result = JSON.parse(string);
+				if (result != undefined) {
+					files = result;
+				} 
+			}
+
+			function init_command(commandlist) {
+				if (commandlist.length == 1) {					
+					load(JSON.stringify(fs)); return "";
+				}
+				var string = "";
+				for (i = 1; i < commandlist.length; i++) {
+					string += commandlist[i] + " ";
+				}
+				load(string); return "";
+			}
+
+			function ls_command(commandlist) {
+				// find flags:
+				var a_flag = false;	
+				var new_commandlist = [];				
+				for (i = 0; i < commandlist.length; i++) {
+					if (commandlist[i] == "-a") {						
+						a_flag = true;
+					} else {
+						new_commandlist.push(commandlist[i]);
+					}
+				}
+				var commandlist = new_commandlist;
+
+				if (a_flag) {
+					if (commandlist[1] != undefined) {						
+						if (files[current_directory + commandlist[1] + "/"] != undefined) {
+							return files[current_directory + commandlist[1] + "/"].filedata;
+						}
+					} else {						
+						return files[current_directory].filedata;
+					}
+				} 
+
+				if (!a_flag) {
+					var result = "";
+					if (commandlist[1] != undefined) {
+						if (files[current_directory + commandlist[1] + "/"] != undefined) {
+							var dir_text = files[current_directory + commandlist[1] + "/"].filedata;
+							var dir_contents = dir_text.split('\n');
+							for (i = 0; i < dir_contents.length; i++) {
+
+								if (dir_contents[i].charAt(0) != ".") {										
+									result += dir_contents[i];
+									if (i < dir_contents.length-1)
+										result += "\n";
+								}
+							}
+							return result;
+						}
+					} else {
+						var dir_text = files[current_directory].filedata;
+						var dir_contents = dir_text.split('\n');
+						for (i = 0; i < dir_contents.length; i++) {
+
+							if (dir_contents[i].charAt(0) != ".") {										
+								result += dir_contents[i];
+								if (i < dir_contents.length-1)
+									result += "\n";
+							}
+						}
+						return result;
+					}
+				}
+				return "";
+			}
+
+			function count_command(commandlist) {
+				if (files[current_directory + commandlist[1] + "/"] != undefined) {
+					var file = files[current_directory + commandlist[1] + "/"].filedata;
+					var character_count = file.length;
+					var word_count = file.replace( /\n/g, " " ).split( " " ).length;
+					var line_count = file.split('\n').length;
+					return "lines: " + line_count + ", words: " + word_count + ", characters: " + character_count + "\n";
+				} else {
+					return "";
+				}
+			}
+
+			function edit_command(commandlist) {
+				commandline_mode = false;
+				file_being_edited = commandlist[1];
+				filepath_being_edited = current_directory + file_being_edited + "/";
+				var initial_data = "";
+				if (files[filepath_being_edited] === undefined) {
+					files[current_directory].filedata += file_being_edited + "\n";
+				} else {
+					initial_data = files[filepath_being_edited].filedata;
+				}					
+				document.getElementById("text").innerText = initial_data;
+				return "";
+			}
+
+			function execute_command(commandlist) {
+				_return = "";
+				_parameters = commandlist;
+				eval(files[current_directory + commandlist[1] + "/"].filedata);
+				return _return;
+			}
+
+			function change_command(commandlist) {
+				if (commandlist[1] == ".." && current_directory != "/") {
+					var index = current_directory.slice(0, current_directory.length - 1).lastIndexOf("/");
+					current_directory = current_directory.slice(0, index + 1);
+
+				} else if (commandlist[1] == ".") {
+
+				} else if (commandlist[1] === undefined) {
+					current_directory = "/";
+
+				} else {						
+					var directory_exists = false;
+					var files_in_current_directory = files[current_directory].filedata.split('\n');
+					for (var i = 0; i < files_in_current_directory.length; i++) {
+						if (files_in_current_directory[i] == commandlist[1] && files[current_directory + files_in_current_directory[i] + "/"] != undefined) {
+							directory_exists = true;
+						}
+					}
+					if (directory_exists) 
+						current_directory += commandlist[1] + "/";	 // only relative movement through fs.			
+				}
+				return "";
 			}
 
 
 			// stubs for executed javscript to use to interact with the terminal.
 			var _return;
 			var _parameters;
+			//
 
 			function interpret(commandstring) {				
 				var commandlist = commandstring.trim().split(' ');
 				var command = commandlist[0];
 
-				if (command == "help" || command == "?") {
-					return "commands:\nedit(ed) <file> \nlist(ls) <file> \npresent(pwd) \nchange(cd) <file> \ndump \ndelete(rm) <file> \ncount(c) <file> \nclear(l) \nmanual(man) <command> \nhelp(?) \nexecute(x) <file>\n   Use \"~\" or Esc to exit the text editor.\n\n";
+				if (command == "help" || command == "?" || command == "man") {
+					if (commandlist[1] === undefined) {
+					return "commands:\nedit(ed) <file> \nlist(ls) [file] \npresent(pwd) \nchange(cd) [file] \ndump \ninit [JSON string] \nremove(rm) <file> \ncount(wc) <file> \nclear(l) \nexecute(x) <file> \nhelp(?) [command]\n";
+				} else {
+					if (manuals[commandlist[1]] != undefined) {
+						return manuals[commandlist[1]] + "\n";
+					} else return ""; 
+				}
 
-				} else if (command == "edit" || command == "e") {
-					commandline_mode = false;
-					file_being_edited = commandlist[1];
-					filepath_being_edited = current_directory + file_being_edited + "/";
-					var initial_data = "";
-					if (files[filepath_being_edited] === undefined) {
-						files[current_directory].filedata += file_being_edited + "\n";
-					} else {
-						initial_data = files[filepath_being_edited].filedata;
-					}					
-					document.getElementById("text").innerText = initial_data;
-					return "";
+				} else if (command == "edit" || command == "ed" || command == "e" || command == "mkdir") {
+					return edit_command(commandlist);
 
-				} else if (command == "delete" || command == "rm" ) {										
+				} else if (command == "remove" || command == "rm") {										
 					files[current_directory + commandlist[1] + "/"] = undefined;
+					// to fix rm problem:
 					/// files[current_directory].filedata // remove line in this file, that says the commandlist[1] file even exists anymore.
 					return "";
 
 				} else if (command == "execute" || command == "x") {
-					_return = "";
-					_parameters = commandlist;
-					eval(files[current_directory + commandlist[1] + "/"].filedata);
-					return _return;
+					return execute_command(commandlist);
 
 				} else if (command == "change" || command == "cd") {
+					return change_command(commandlist);
 
-					if (commandlist[1] == ".." && current_directory != "/") {
-						var index = current_directory.slice(0, current_directory.length - 1).lastIndexOf("/");
-						current_directory = current_directory.slice(0, index + 1);
-
-					} else if (commandlist[1] == ".") {		
-
-					} else {						
-						var directory_exists = false;
-						var files_in_current_directory = files[current_directory].filedata.split('\n');
-						for (var i = 0; i < files_in_current_directory.length; i++) {
-							if (files_in_current_directory[i] == commandlist[1] && files[current_directory + files_in_current_directory[i] + "/"] != undefined) {
-								directory_exists = true;
-							}
-						}
-						if (directory_exists) 
-							current_directory += commandlist[1] + "/";	 // only relative movement through fs.			
-					}
-					return "";
-
-				} else if (command == "pwd" || command == "p") {
+				} else if (command == "present" || command == "pwd") {
 					return current_directory + "\n";					
-
-
-				} else if (command == "man" || command == "m") {
-					if (manuals[commandlist[1]] != undefined) {
-						return manuals[commandlist[1]] + "\n";
-					} else {
-						return "";
-					}
-				} else if (command == "list" || command == "ls") {
-					if (commandlist[1] != undefined) {
-						if (files[current_directory + commandlist[1] + "/"] != undefined) {
-							return files[current_directory + commandlist[1] + "/"].filedata;
-						}
-					} else {
-						return files[current_directory].filedata;
-					}
-					return "";
+									
+				} else if (command == "list" || command == "ls" || command == "sl" || command == "cat") {
+					return ls_command(commandlist);
 
 				} else if (command == "clear" || command == "l") {
 					document.getElementById("text").innerHTML = "";	
 					return "";
 
-				} else if (command == "count" || command == "c") {
-					if (files[commandlist[1]] != undefined)
-						return (files[commandlist[1]].length) + "\n";
+				} else if (command == "count" || command == "wc") {
+					return count_command(commandlist);
 
 				} else if (command == "dump") {
 					return JSON.stringify(files) + "\n";
 
-				} else if (command == "") {
-					return "";
-				} else {
-					return "?\n";
-				}				
+				} else if (command == "init") {
+					return init_command(commandlist);			
+
+				} else return "";						
 			}
 
 			function placeCaretAtEnd(el) {
@@ -199,7 +296,7 @@
 			function on_focus() {
 				if (!has_focused_before) {
 					has_focused_before = true;
-					files["/"] = new file("", "");
+					files = fs;
 					document.getElementById("text").innerHTML = welcome_message + "<br>" + prompt_string();		
 				}
 				placeCaretAtEnd(document.getElementById("text"));						
@@ -245,6 +342,9 @@
 			}    		
 	
 		</script>
+
+		<script src="filesystem.js"></script>
+
 	</head>
 	<body>
 		<div id="container">			
@@ -256,6 +356,6 @@
 				autocorrect="off" 
 				autocapitalize="off" 
 				spellcheck="false">click me</div>						
-		</div>
+		</div>		
 	</body>
 </html>
