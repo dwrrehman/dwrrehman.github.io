@@ -23,7 +23,7 @@ const char* template_0 =
 "        <style>\n"
 "             p {\n"
 "                 white-space: pre-wrap;\n"
-"                 white-space: pre-wrap;\n"
+"                 font-family: monospace;\n"
 "             }\n"
 "        </style>\n"
 "    </head>\n"
@@ -32,7 +32,10 @@ const char* template_0 =
 "        <p>"; const char* template_3 = "</p>\n"
 "    </body>\n";
 
-const char* index_template = "<b><li><a href=\"blog/%s.html\">2001127.001449</a></li></b>";
+const char* index_template = "\n            <li><b><a href=\"blog/%s.html\">%s</a></b></li>\n";
+const char* blog_index_location = "/Users/deniylreimn/Documents/projects/website/blog.html";
+const char* blog_location =       "/Users/deniylreimn/Documents/projects/website/blog/";
+
 
 void open_file(const char* filename, char** text, unsigned long* length) {
     FILE* file = fopen(filename, "r");
@@ -54,33 +57,24 @@ static inline void get_datetime(char buffer[16]) {
 }
 
 int main(int argc, const char * argv[]) {
-    if (argc < 3) { printf("usage: \n\t./blogify <txt_file> <destination_dir> \n\na utility program to take a txt file, and turn it into a blog post, named the current datetime.\n"); exit(1); }
+    if (argc < 2) { printf("usage: \n\t./blogify <txt_file>\n\na utility program to take a txt file, and turn it into a blog post, named the current datetime.\n\n"); exit(1); }
     
-    char* text = NULL;
-    unsigned long length = 0;
-    
+    char* text = NULL; unsigned long length = 0;
     printf("opening file \"%s\" for reading...\n", argv[1]);
-    usleep(200000);
     open_file(argv[1], &text, &length);
-    
     printf("read %lu characters from file \"%s\".\n", length, argv[1]);
-    usleep(200000);
-    
+        
     char postname[16] = {0}, output_filepath[4096] = {0};
     get_datetime(postname);
-    strcpy(output_filepath, argv[2]);
-    strcat(output_filepath, "/");
+    strcpy(output_filepath, blog_location);
     strcat(output_filepath, postname);
     strcat(output_filepath, ".html");
     
     printf("opening destintation file \"%s\"...\n", output_filepath);
-    usleep(200000);
     FILE* out = fopen(output_filepath, "w+");
-    
     if (!out) { perror("fopen(w+)"); exit(1); }
-    printf("writing blogpost to \"%s\"...\n", output_filepath);
-    usleep(200000);
     
+    printf("writing blogpost to \"%s\"...\n", output_filepath);
     fwrite(template_0, sizeof(char), strlen(template_0), out);
     fwrite(postname, sizeof(char), 16, out);
     fwrite(template_1, sizeof(char), strlen(template_1), out);
@@ -88,12 +82,32 @@ int main(int argc, const char * argv[]) {
     fwrite(template_2, sizeof(char), strlen(template_2), out);
     fwrite(text, sizeof(char), length, out);
     fwrite(template_3, sizeof(char), strlen(template_3), out);
-    printf("wrote blogpost!\n\n");
-    usleep(200000);
+    fclose(out);
+    free(text);
+    printf("wrote blogpost!\n");
+            
+    char* index = NULL; length = 0;
+    printf("opening blog.html index file at \"%s\"...\n", blog_index_location);
+    open_file(blog_index_location, &index, &length);
+    printf("read %lu characters from file \"%s\".\n", length, blog_index_location);
     
-    printf("index this blog post in blog.html by inserting: \n\n");
-    printf(index_template, postname);
-    printf("\n\n");
+    char toinsert[1000] = {0};
+    sprintf(toinsert, index_template, postname, postname);
+    printf("constructed index: \"%s\".\n", toinsert);
+        
+    printf("rewriting index \"%s\"...\n", blog_index_location);
+    FILE* new = fopen(blog_index_location, "w");
+    if (!new) { perror("fopen(w)"); exit(1); }
     
+    char c = 0, p = 0; unsigned long i = 0;
+    while ((c = index[i++])) {
+        if (c == '\n' && p == '\n') fputs(toinsert, new);
+        else fputc(c, new);
+        p = c;
+    }
+    printf("blog post indexed.\n");
+    fclose(new);
+    free(index);
+    printf("     done!\n");
     return 0;
 }
