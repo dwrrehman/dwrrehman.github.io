@@ -1,5 +1,5 @@
 //
-//  
+//
 //  blogify.c:     a utility for making blogposts out of txt files.
 //
 //  Created by Daniel Rehman on 2001127.
@@ -21,9 +21,15 @@ const char* template_0 =
 "    <title>";const char* template_1 = "</title>\n"
 "    <head>\n"
 "        <style>\n"
+"             h1 {\n"
+"                 font-family: monospace;\n"
+"             }\n"
+"             \n"
 "             p {\n"
 "                 white-space: pre-wrap;\n"
 "                 font-family: monospace;\n"
+"                 font-size: 20px;\n"
+"                 margin: 30px;\n"
 "             }\n"
 "        </style>\n"
 "    </head>\n"
