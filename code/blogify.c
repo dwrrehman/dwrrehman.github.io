@@ -38,8 +38,8 @@ const char* template_0 =
 "        <p>"; const char* template_3 = "</p>\n"
 "    </body>\n";
 
-const char* index_template = "\n            <li><b><a href=\"blog/%s.html\">%s</a></b></li>\n";
-const char* blog_index_location = "/Users/deniylreimn/Documents/projects/website/blog.html";
+const char* index_template = "\n            <li><b><a href=\"%s.html\">%s</a></b></li>\n";
+const char* blog_index_location = "/Users/deniylreimn/Documents/projects/website/blog/index.html";
 const char* blog_location =       "/Users/deniylreimn/Documents/projects/website/blog/";
 
 
