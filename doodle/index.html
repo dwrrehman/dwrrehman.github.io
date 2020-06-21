@@ -2,9 +2,13 @@
 <html>
 	<head>
 		<title>doodle</title>
+
+		<link rel="stylesheet" href="styles.css">
+
 	</head>
 
-	<body>				
+	<body>	
+
 		<div class="header">
 			<div class="centered">
 
@@ -16,100 +20,14 @@
 			</div>
 			
 		</div>
-
-		<!-- <hr>		 -->
+		
 
 		<textarea id="text"></textarea>
+
 		<div class="vertical-line"></div>		
+
 		<canvas id="canvas"></canvas>
-
-		<style type="text/css">
-
-			html, body {
-  				width:  100%;
-  				height: 100%;
-  				margin: 0;
-			}
-
-			textarea {
-				width: 49%;
-				height: 90%;
-				float: left;
-				margin: 2px;
-				border: 1px solid #d3d3d3;
-				font-size: 20pt;  				
-			}
-
-			canvas {
-				width: 49%;
-				height: 90%;
-				float: left;
-				margin: 2px;
-				border: 1px solid #d3d3d3;				
-			}
-			
-			p {
-				font-family: monospace;
-				font-size: 15px;									
-				float: left;
-
-				margin-left: 10px;
-				margin-right: 10px;
-				margin-top: none;
-				margin-bottom: none;
-			}
-
-			button {
-				font-family: monospace;				
-				font-size: 15px;
-
-				background-color: lightgray;
-
-				float: left;
-				text-align: center;
-				
-				border-radius: 10px;				
-				border: none;
-
-				padding-left: 15px;
-				padding-right: 15px;
-
-				margin-top: none;
-				margin-bottom: none;
-				margin-left: 10px;
-				margin-right: 10px;
-			}
-
-			div.header {
-				width: 99%;								
-				display: inline-block;
-				text-align: center;
-
-				background-color: white;				
-
-				margin: none;
-				border: none;
-			}
-
-			div.centered {
-				background-color: white;
-				display: inline-block;
-				margin: none;
-				border: 1px solid lightgray;
-				border-radius: 10px;
-			}
-
-			div.vertical-line {
-      			width: 1px; 
-      			background-color: black; 
-      			height: 90%; 
-      			float: left;        			
-    		}
-
-		</style>
-
-
-
+		
 		<script src="code.js"></script>
 	</body>
 </html>
