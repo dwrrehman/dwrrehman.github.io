@@ -22,7 +22,7 @@ var editor = CodeMirror(document.body, {
 function csr(context, tokens, count) {
 	var t = tokens.join("");
 	if (t == "repeat") {
-		
+
 	}
 }
 
@@ -64,6 +64,7 @@ draw.stroke();
 
 
 function info() {
+	alert("User clicked info!!!");
 	console.log("User clicked info!!!");
 }
 
