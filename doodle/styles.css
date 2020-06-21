@@ -1,25 +1,36 @@
 html, body {
-    width:  100%;
+    width: 100%;
     height: 100%;
     margin: 0;
+    background-color: gray;
 }
 
-textarea {
+.CodeMirror {    
+    
     width: 49%;
-    height: 90%;
-    float: left;
-    margin: 1px;
-    border: 1px solid #d3d3d3;
-    font-size: 20pt;
+    height: 95%;
+    display: inline-block;
+    float: right;
+
+    margin: 5px;
+        
 }
 
 canvas {
     width: 49%;
-    height: 90%;
-    float: left;
-    margin: 1px;
-    border: 1px solid #d3d3d3;
+    height: 95%;
+    display: inline-block;
+    float: left;    
+
+    margin: 5px;
+
+    border: 1px solid black;    
+    background-color: white;    
 }
+
+
+
+
 
 p {
     font-family: monospace;
@@ -36,7 +47,7 @@ button {
     font-family: monospace;
     font-size: 15px;
     
-    background-color: lightgray;
+    background-color: white;
     
     float: left;
     text-align: center;
@@ -58,23 +69,46 @@ div.header {
     display: inline-block;
     text-align: center;
     
-    background-color: white;
-    
+
     margin: none;
     border: none;
 }
 
-div.centered {
-    background-color: white;
+div.centered {    
+
+    background-color: lightgray;
+
     display: inline-block;
     margin: none;
     border: 1px solid lightgray;
     border-radius: 10px;
 }
 
+
+
+
+
+
+
+
+
+/*
 div.vertical-line {
     width: 1px;
     background-color: black;
     height: 90%;
     float: left;
+}*/
+
+/*div.content {
+    width: 99%;
+    height: 91%;
+
+    display: inline-block;
+    text-align: center;
+            
+    margin: none;
+    border: none;
 }
+*/
+
