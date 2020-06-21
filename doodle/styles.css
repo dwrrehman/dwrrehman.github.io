@@ -8,7 +8,7 @@ textarea {
     width: 49%;
     height: 90%;
     float: left;
-    margin: 2px;
+    margin: 1px;
     border: 1px solid #d3d3d3;
     font-size: 20pt;
 }
@@ -17,7 +17,7 @@ canvas {
     width: 49%;
     height: 90%;
     float: left;
-    margin: 2px;
+    margin: 1px;
     border: 1px solid #d3d3d3;
 }
 
