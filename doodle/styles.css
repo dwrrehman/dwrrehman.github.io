@@ -8,7 +8,7 @@ html, body {
 .CodeMirror {    
     
     width: 49%;
-    height: 95%;
+    height: 90%;
     display: inline-block;
     float: right;
 
@@ -18,7 +18,7 @@ html, body {
 
 canvas {
     width: 49%;
-    height: 95%;
+    height: 90%;
     display: inline-block;
     float: left;    
 
@@ -28,13 +28,9 @@ canvas {
     background-color: white;    
 }
 
-
-
-
-
 p {
     font-family: monospace;
-    font-size: 15px;
+    font-size: 12px;
     float: left;
     
     margin-left: 10px;
@@ -45,7 +41,7 @@ p {
 
 button {
     font-family: monospace;
-    font-size: 15px;
+    font-size: 10;
     
     background-color: white;
     
@@ -65,7 +61,7 @@ button {
 }
 
 div.header {
-    width: 99%;
+    width: 100%;
     display: inline-block;
     text-align: center;
     
@@ -75,9 +71,7 @@ div.header {
 }
 
 div.centered {    
-
     background-color: lightgray;
-
     display: inline-block;
     margin: none;
     border: 1px solid lightgray;
