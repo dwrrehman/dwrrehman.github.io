@@ -7,17 +7,16 @@ html, body {
 
 .CodeMirror {    
     
-    width: 49%;
+    width: 48%;
     height: 90%;
     display: inline-block;
     float: right;
 
-    margin: 5px;
-        
+    margin: 5px;        
 }
 
 canvas {
-    width: 49%;
+    width: 48%;
     height: 90%;
     display: inline-block;
     float: left;    

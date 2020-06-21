@@ -18,28 +18,13 @@ var editor = CodeMirror(document.body, {
 });
 
 // ----------------- compiler: ---------------------
-/*
-static inline size_t lex
- (uint8_t* text, uint8_t* tokens,
-  uint16_t* loc, long length) {
-     
-    size_t count = 0;
-    uint16_t l = 1, c = 1;
-    
-    for (long i = 0; i < length; i++) {
-        if (text[i] > 32) {
-            loc[2 * count] = l;
-            loc[2 * count + 1] = c;
-            tokens[count++] = text[i];
-        }
-        if (text[i] == 10) {
-            l++;
-            c = 1;
-        } else c++;
-    }
-    return count;
+
+function csr(context, tokens, count) {
+	var t = tokens.join("");
+	if (t == "repeat") {
+		
+	}
 }
-*/
 
 function compile(text) {
 	
@@ -55,9 +40,8 @@ function compile(text) {
 		} if (text[i] == '\n') { l++; c = 1; } else c++;
 	}
 
-	for (var i = 0; i < count; i++) {		
-		console.log("tokens[" + i + "] = " + tokens[i]);		
-	}
+	var context = {};
+	csr(context, tokens, count);
 }
 
 
