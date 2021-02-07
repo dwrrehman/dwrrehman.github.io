@@ -1,4 +1,3 @@
 # dwrrehman.github.io
 
-this is a website to exhibit daniel rehman's coding projects.
-...and also his blog, sometimes.
+This is the personal website of Daniel Rehman (dwrr), made to exhibit things like his computer programs, music, poetry, writing/blog, and other things that he makes.
