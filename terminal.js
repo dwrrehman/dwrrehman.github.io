@@ -101,9 +101,29 @@ function user_input(event) {
 
 	flush_screen();
 }
+
+function write_string(string) {
+	for (let i = 0; i < string.length; i++) {
+
+		if (string[i] === '\n') {
+			cursor_column = 0;
+			if (cursor_line < window_rows - 1) cursor_line += 1;
+		} else {
+			screen[cursor_line][cursor_column] = string[i];
+			if (cursor_column < window_columns - 1) cursor_column += 1;
+		}
+
+	}
+}
+
 window.onload = function() {
 	flush_screen();
+	write_string("This is the interface for Daniel Rehman's website.\nIt's still a work in progress, currently!\n  Try typing something!\n");
+	flush_screen();
 	document.addEventListener('keydown', user_input, false);
+	setTimeout(function() {
+    		document.getElementById('trigger').focus();
+	}, 0);
 }
 
 
