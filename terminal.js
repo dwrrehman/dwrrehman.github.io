@@ -115,15 +115,18 @@ function write_string(string) {
 
 	}
 }
+function focus_on_trigger() {
+	setTimeout(function() {
+    		document.getElementById('trigger').focus();
+	}, 0);
+}
 
 window.onload = function() {
 	flush_screen();
 	write_string("This is the interface for Daniel Rehman's website.\nIt's still a work in progress, currently!\n  Try typing something!\n");
 	flush_screen();
 	document.addEventListener('keydown', user_input, false);
-	setTimeout(function() {
-    		document.getElementById('trigger').focus();
-	}, 0);
+	focus_on_trigger();
 }
 
 
