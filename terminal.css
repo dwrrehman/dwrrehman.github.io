@@ -1,53 +1,21 @@
-#terminal {	
-	position: absolute;
-  	top: 0;
-  	left: 0; 
-
-	color: #3AFD33;	
+#terminal {
+	color: #3AFD33;
 
 	font-family: Courier New;
 	font-weight: lighter;
 
-	background: black;
-
-	border: none;
-	padding: 0;
-	margin: 0;
-
-	overflow-y: hidden;
-	overflow-x: hidden; 
-
 	width: screen.width;
 	height: screen.height;
 }
 
-#trigger {
-	position: absolute;
-  	top: 0;
-  	left: 0; 
-
-	color: transparent;
-	background: transparent;
-	opacity: 0;
-
-	border: none;
-	padding: 0;
-	margin: 0;
-
-	overflow-y: hidden;
-	overflow-x: hidden; 
-
-	width: screen.width;
-	height: screen.height;
+*:focus {
+	outline: none;
 }
 
-html, body {
+* {
 	padding: 0; 
 	margin: 0;
 	border: none;
 	
-	overflow-y: hidden;
-	overflow-x: hidden; 
-
 	background: black;
-}
+}s

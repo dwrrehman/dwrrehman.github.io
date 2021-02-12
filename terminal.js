@@ -11,122 +11,121 @@ function flush_screen() {
 	document.getElementById("terminal").style.fontSize = font_size.toString() + "px";
 	document.getElementById("terminal").style.lineHeight = font_size.toString() + "px";
 	
-	const width  = 	window.innerWidth || 
-			document.documentElement.clientWidth || 
-			document.body.clientWidth;
+	// const width  = 	window.innerWidth || 
+	// 		document.documentElement.clientWidth || 
+	// 		document.body.clientWidth;
 
-	const height = 	window.innerHeight || 
-			document.documentElement.clientHeight || 
-			document.body.clientHeight;
+	// const height = 	window.innerHeight || 
+	// 		document.documentElement.clientHeight || 
+	// 		document.body.clientHeight;
 
-	window_rows = Math.floor(height / font_size);
-	window_columns = Math.floor(width / (font_size * font_wh_ratio));
+	// window_rows = Math.floor(height / font_size);
+	// window_columns = Math.floor(width / (font_size * font_wh_ratio));
 
-	while(window_rows > screen.length) screen.push(Array(window_columns).fill(' '));
+	// while(window_rows > screen.length) screen.push(Array(window_columns).fill(' '));
 
-	if (cursor_line >= window_rows) cursor_line = window_rows - 1;
-	if (cursor_column >= window_columns) cursor_column = window_columns - 1;
+	// if (cursor_line >= window_rows) cursor_line = window_rows - 1;
+	// if (cursor_column >= window_columns) cursor_column = window_columns - 1;
 
-	console.log("window height and width:  ", width, height);
-	console.log("cursor x y: ", cursor_column, cursor_line);
-	console.log("window rows and cols : ", window_rows, window_columns);
+	// console.log("window height and width:  ", width, height);
+	// console.log("cursor x y: ", cursor_column, cursor_line);
+	// console.log("window rows and cols : ", window_rows, window_columns);
 
-	let string = "";
-	for (let line = 0; line < window_rows; line++) {
-		for (let column = 0; column < window_columns; column++) {
+	// let string = "";
+	// for (let line = 0; line < window_rows; line++) {
+	// 	for (let column = 0; column < window_columns; column++) {
 
-			if (line === cursor_line && column === cursor_column) {
-				string += "<u>";
-			}
+	// 		if (line === cursor_line && column === cursor_column) {
+	// 			string += "<u>";
+	// 		}
 
-			let c = " ";
-			if (	line < screen.length && 
-				column < screen[line].length) 
+	// 		let c = " ";
+	// 		if (	line < screen.length && 
+	// 			column < screen[line].length) 
 
-				c = screen[line][column];
+	// 			c = screen[line][column];
 
-			if (c === '\n') break;
-			else if (c === ' ') string += "&nbsp;";
-			else if (c === '\t') string += "&nbsp;";
-			else string += c;
+	// 		if (c === '\n') break;
+	// 		else if (c === ' ') string += "&nbsp;";
+	// 		else if (c === '\t') string += "&nbsp;";
+	// 		else string += c;
 
-			if (line === cursor_line && column === cursor_column) {
-				string += "</u>";
-			}
-		}
-		string += "<br>";
-	}
-	document.getElementById("terminal").innerHTML = string;
+	// 		if (line === cursor_line && column === cursor_column) {
+	// 			string += "</u>";
+	// 		}
+	// 	}
+	// 	string += "<br>";
+	// }
+	document.getElementById("terminal").innerHTML = "hi there!";
 }
 
 function user_input(event) {
 	event = event || window.event;
 
-	if (
-		event.key === "Dead" || 
-		event.key === "Control" || 
-		event.key === "Shift" || 
-		event.key === "Alt" || 
-		event.key === "Meta" || 
-		event.key === "CapsLock") return;
+	// if (
+	// 	event.key === "Dead" || 
+	// 	event.key === "Control" || 
+	// 	event.key === "Shift" || 
+	// 	event.key === "Alt" || 
+	// 	event.key === "Meta" || 
+	// 	event.key === "CapsLock") return;
 
-	if (event.key === "Enter") {
-		cursor_column = 0;
-		if (cursor_line < window_rows - 1) cursor_line += 1;
+	// if (event.key === "Enter") {
+	// 	cursor_column = 0;
+	// 	if (cursor_line < window_rows - 1) cursor_line += 1;
 
-	} else if (event.key === "Tab") {
-		screen[cursor_line][cursor_column] = ' ';
-		if (cursor_column < window_columns - 1) cursor_column += 1;
+	// } else if (event.key === "Tab") {
+	// 	screen[cursor_line][cursor_column] = ' ';
+	// 	if (cursor_column < window_columns - 1) cursor_column += 1;
 
-	} else if (event.key === "Backspace") {
-		if (cursor_column > 0) cursor_column -= 1;
-		screen[cursor_line][cursor_column] = ' ';
+	// } else if (event.key === "Backspace") {
+	// 	if (cursor_column > 0) cursor_column -= 1;
+	// 	screen[cursor_line][cursor_column] = ' ';
 
-	} else if (event.key === 'ArrowRight') { 
-		if (cursor_column < window_columns - 1) cursor_column += 1;
+	// } else if (event.key === 'ArrowRight') { 
+	// 	if (cursor_column < window_columns - 1) cursor_column += 1;
 
-	} else if (event.key === 'ArrowLeft') {
-		if (cursor_column > 0) cursor_column -= 1;
+	// } else if (event.key === 'ArrowLeft') {
+	// 	if (cursor_column > 0) cursor_column -= 1;
 
-	} else if (event.key === 'ArrowUp') {
-		if (cursor_line > 0) cursor_line -= 1;
+	// } else if (event.key === 'ArrowUp') {
+	// 	if (cursor_line > 0) cursor_line -= 1;
 
-	} else if (event.key === 'ArrowDown') {
-		if (cursor_line < window_rows - 1) cursor_line += 1;
+	// } else if (event.key === 'ArrowDown') {
+	// 	if (cursor_line < window_rows - 1) cursor_line += 1;
 
-	} else {
-		screen[cursor_line][cursor_column] = event.key;
-		if (cursor_column < window_columns - 1) cursor_column += 1;
-	}
+	// } else {
+	// 	screen[cursor_line][cursor_column] = event.key;
+	// 	if (cursor_column < window_columns - 1) cursor_column += 1;
+	// }
 
-	flush_screen();
+	// flush_screen();
 }
 
-function write_string(string) {
-	for (let i = 0; i < string.length; i++) {
+// function write_string(string) {
+// 	for (let i = 0; i < string.length; i++) {
 
-		if (string[i] === '\n') {
-			cursor_column = 0;
-			if (cursor_line < window_rows - 1) cursor_line += 1;
-		} else {
-			screen[cursor_line][cursor_column] = string[i];
-			if (cursor_column < window_columns - 1) cursor_column += 1;
-		}
+// 		if (string[i] === '\n') {
+// 			cursor_column = 0;
+// 			if (cursor_line < window_rows - 1) cursor_line += 1;
+// 		} else {
+// 			screen[cursor_line][cursor_column] = string[i];
+// 			if (cursor_column < window_columns - 1) cursor_column += 1;
+// 		}
 
-	}
-}
-function focus_on_trigger() {
-	setTimeout(function() {
-    		document.getElementById('trigger').focus();
-	}, 0);
-}
+// 	}
+// }
+// function focus_on_trigger() {
+// 	setTimeout(function() {
+//     		document.getElementById('trigger').focus();
+// 	}, 0);
+// }
 
 window.onload = function() {
 	flush_screen();
-	write_string("This is the interface for Daniel Rehman's website.\nIt's still a work in progress, currently!\n  Try typing something!\n");
-	flush_screen();
+	// write_string("This is the interface for Daniel Rehman's website.\nIt's still a work in progress, currently!\n  Try typing something!\n");
+	// flush_screen();
 	document.addEventListener('keydown', user_input, false);
-	focus_on_trigger();
 }
 
 
