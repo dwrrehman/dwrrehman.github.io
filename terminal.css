@@ -1,9 +1,9 @@
 #terminal {
 	color: #3AFD33;
-
-	font-family: Courier New;
+	font-family: Menlo;
 	font-weight: lighter;
-
+	font-size: 30px;
+	line-height: 30px;
 	width: screen.width;
 	height: screen.height;
 }
@@ -12,10 +12,9 @@
 	outline: none;
 }
 
-* {
+html, body {
 	padding: 0; 
 	margin: 0;
 	border: none;
-	
 	background: black;
-}s
+}
