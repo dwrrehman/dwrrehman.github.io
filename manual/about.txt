@@ -4,24 +4,23 @@ __________________________
 
 usage:
 
-	a (filename)
+	a (unimplemented)
 
 inputs: 
 
-	accepts one required argument, the filename which the user wishes to print meta-data about. 
+	unimplemented.
 
 output: 
 
-	prints the meta-data for a given file,
-	including its file type, creation date, and a description. 
+	unimplemented.
 
 examples:
 
-	:: a file.txt     (displays file type and meta data for file.txt) 
-	:: a 123.mp3      (displays file type and meta data for 123.mp3)
+	:: a file.txt        (unimplemented)
+	
 			
 notes:
 
-	n/a
+	unimplemented.
 
 (end)
