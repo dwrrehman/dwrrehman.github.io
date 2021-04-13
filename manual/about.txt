@@ -1,0 +1,27 @@
+
+  manual for a ("about"):
+__________________________
+
+usage:
+
+	a (filename)
+
+inputs: 
+
+	accepts one required argument, the filename which the user wishes to print meta-data about. 
+
+output: 
+
+	prints the meta-data for a given file,
+	including its file type, creation date, and a description. 
+
+examples:
+
+	:: a file.txt     (displays file type and meta data for file.txt) 
+	:: a 123.mp3      (displays file type and meta data for 123.mp3)
+			
+notes:
+
+	n/a
+
+(end)

@@ -1,107 +1,185 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<title>dwrr</title>
-		<!-- <link rel="stylesheet" href="terminal.css"> -->
-		<!-- <script type="text/javascript" src="terminal.js"></script> -->
-		<style>
-			#terminal {
-				color: #3AFD33;
-				font-family: Menlo;
-				font-weight: lighter;
-				font-size: 30px;
-				line-height: 30px;
-				width: screen.width;
-				height: screen.height;
-			}
+<html><head>
+	<title>dwrr</title>
+	<style>
+		#terminal {
+			color: #3AFD33;
+			font-family: Menlo;
+			font-weight: lighter;
+			font-size: 20px;
+			line-height: 20px;
+			width: screen.width;
+			height: screen.height;
+		}
 
-			*:focus {
-				outline: none;
-			}
+		*:focus { outline: none; }
 
-			html, body {
-				padding: 0; 
-				margin: 0;
-				border: none;
-				background: black;
+		html, body {
+			padding: 0; 
+			margin: 0;
+			border: none;
+			background: black;
+		}
+	</style>
+	<script> 
+
+		// const example_html_string = "\
+		// listing not available right now.<br>\
+		// <a href='https://www.w3schools.com'>https://www.w3schools.com</a><br>\
+		// <img src='dog.JPG' title='this is a dog' width='128' height='128'><br>"
+		//  <img> tag.
+		//  <iframe> tag.
+		//  <video> and <audio>  tag
+		// 
+
+	/*		<object data="/path_to_text_file/text.txt" type="text/plain"
+		width="500" style="height: 300px">
+		<a href="/path_to_text_file/text.txt">No Support?</a>
+			</object>
+
+	// "<iframe src=\"text.txt\" id=\"terminal\" frameborder=\"0\" \
+		// height=\"400\" width=\"600\" ></iframe> <br>"
+	*/
+
+
+		const prompt_emblem = "::"
+
+		const welcome_message = "\
+		This is the terminal interface for Daniel Rehman's website.<br>\
+		Type \"h\" for more info.<br>";
+
+		const help_message = "\
+		<br>\
+		h [cmd]  :   help: help manual <br>\
+		a (file) :   about: display file info <br>\
+		w 	 :   where: print current directory <br>\
+		e        :   edit: unimplemented <br>\
+		f [file] :   file: display file <br>\
+		j [file] :   jump: change directory (default /)<br>\
+		i (file) :   insp: unimplemented <br>\
+		o (file) :   open: open media file (unix: less) <br>\
+		l	 :   clear: clear screen (unix: clear) <br>\
+		<br>"
+
+		const manual = ["manual/help.txt",  "manual/about.txt", "manual/where.txt", "manual/edit.txt", 
+				"manual/file.txt",  "manual/jump.txt", "manual/i.txt",     "manual/o.txt", "manual/clear.txt"]
+
+
+
+		var terminal = null
+		var current_directory = "/"
+
+
+		function run(command) {
+
+			// empty command:
+			if (command === "nbsp;") return "";	
+
+			// help command:
+			else if (command === "h") return help_message
+			else if (command === "h h") return text_to_html(file_contents(manual[0]));
+			else if (command === "h a") return text_to_html(file_contents(manual[1]));
+			else if (command === "h w") return text_to_html(file_contents(manual[2]));
+			else if (command === "h e") return text_to_html(file_contents(manual[3]));
+			else if (command === "h f") return text_to_html(file_contents(manual[4]));
+			else if (command === "h j") return text_to_html(file_contents(manual[5]));
+			else if (command === "h i") return text_to_html(file_contents(manual[6]));
+			else if (command === "h o") return text_to_html(file_contents(manual[7]));
+			else if (command === "h l") return text_to_html(file_contents(manual[8]));
+			
+			// about command:
+			else if (command === "a") return "about command unimpemented. <br>"
+			
+
+			// where command: (pwd)
+			else if (command === "w") return current_directory + "<br>"
+
+			// edit command (unimplemented)
+			else if (command === "e") return "file-view-command unimplemented.<br>"
+
+			// file command
+			else if (command === "f") return terminal.innerText += file_contents("manual")
+
+			// jump command
+			else if (command === "j") return "jump-command unimplemented.<br>";
+			
+			// inspect command
+			else if (command === "i") return  "uhndefined <br> "
+
+			// open command
+			else if (command === "o") return "open command unimplemented.<br>";
+
+			// clear command:
+			else if (command === "l") { terminal.innerHTML = ""; return ""; }
+
+			// unknown command:
+			else return "?<br>"
+		}
+
+		function text_to_html(html) {
+			let text = ""
+			for (let i = 0; i < html.length; i++) {
+				if (html[i] === '\n') text += "<br>"
+				else if (html[i] === '\t') text += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+				else if (html[i] === ' ') text += "&nbsp;"
+				else text += html[i];
 			}
-		</style>
+			return text
+		}
 		
-		<script> 
-			const prompt_emblem = "::"
+		function append_file_async(path) {
+  			var xhttp = new XMLHttpRequest();
+  			xhttp.onreadystatechange = function() {
+    				if (this.readyState == 4 && this.status == 200) 
+					terminal.innerHTML += text_to_html(this.responseText);
+			};
+  			xhttp.open("GET", path, true);
+  			xhttp.send();
+		}
 
-			const welcome_message = "\
-			This is the terminal interface for Daniel Rehman's website.<br>\
-			Type \"a\" for more info.<br>";
+		function file_contents(path) {
+  			var result = null;
+  			var xmlhttp = new XMLHttpRequest();
+  			xmlhttp.open("GET", path, false);
+  			xmlhttp.send();
+  			if (xmlhttp.status == 200) result = xmlhttp.responseText;
+			return result;
+		}
 
-			const help_message = "\
-			\
-			a 	 : INFO: this help menu <br>\
-			w 	 : PWD: print working directory <br>\
-			e (file) : LIST: display file <br>\
-			f (file) : FILE: inspect file <br>\
-			\
-			j (file) : JUMP: change directory <br>\
-			i (file) : INT: unimplemented <br>\
-			o (file) : OPEN: unimplemented <br>\
-			l	 : CLEAR: clear screen <br>"
+		function input(event) {
+			event = event || window.event
+			if (event.key === "Enter") {
+				let start = terminal.innerHTML.lastIndexOf(prompt_emblem) + prompt_emblem.length + 1
+				terminal.innerHTML = terminal.innerHTML.slice(0, -15)
+				let command = terminal.innerHTML.slice(start, terminal.innerHTML.length);
+				terminal.innerHTML += "<br>"
+				let output = run(command)
+				terminal.innerHTML += output + prompt_emblem + "&nbsp;"
+			} 
+			terminal.focus();
+			var range = document.createRange();
+			range.selectNodeContents(terminal);
+			range.collapse(false);
+			var sel = window.getSelection();
+			sel.removeAllRanges();
+			sel.addRange(range);
+		}
 
-			const example_html_string = "\
-			listing not available right now.<br>\
-			<a href='https://www.w3schools.com'>https://www.w3schools.com</a><br>\
-			<img src='dog.JPG' title='this is a dog' width='128' height='128'><br>"
+		window.onload = function() {
+			terminal = document.getElementById("terminal")
+			terminal.innerHTML = welcome_message + prompt_emblem + "&nbsp;"
+			document.addEventListener('keyup', input, false);
+		}
+	</script>
+</head> 
+<body>
+	<div 
+	id="terminal" 
+	contenteditable="true"
+	spellcheck="false"
+	autocomplete="off"
+	autocorrect="off" 
+	autocapitalize="off"
+	></div>
 
-			var T = null
-
-			var working_directory = "/"
-
-			function run(command) {
-				if (command === "nbsp;") return "";	
-				else if (command === "a") return help_message
-				else if (command === "w") return working_directory + "<br>";
-				else if (command === "e") return example_html_string;
-				else if (command === "f") return "file-command unimplemented.<br>";
-				else if (command === "j") return "jump-command unimplemented.<br>";
-				else if (command === "i") return "inter command unimplemented.<br>";
-				else if (command === "o") return "open command unimplemented.<br>";
-				else if (command === "l") { T.innerHTML = ""; return ""; }
-				else return "?<br>"
-			}
-
-			function input(event) {
-				event = event || window.event
-				if (event.key === "Enter") {
-					let start = T.innerHTML.lastIndexOf(prompt_emblem) + prompt_emblem.length + 1
-					T.innerHTML = T.innerHTML.slice(0, -15)
-					let command = T.innerHTML.slice(start, T.innerHTML.length);
-					T.innerHTML += "<br>"
-					let output = run(command)
-					T.innerHTML += output + prompt_emblem + "&nbsp;"
-				} 
-				T.focus();
-				var range = document.createRange();
-				range.selectNodeContents(T);
-				range.collapse(false);
-				var sel = window.getSelection();
-				sel.removeAllRanges();
-				sel.addRange(range);
-			}
-
-			window.onload = function() {
-				T = document.getElementById("terminal")
-				T.innerHTML = welcome_message + prompt_emblem + "&nbsp;"
-				document.addEventListener('keyup', input, false);
-			}
-		</script>
-	</head> 
-	<body>
-		<div 
-		id="terminal" 
-		contenteditable="true"
-		spellcheck="false"
-		autocomplete="off"
-		autocorrect="off" 
-		autocapitalize="off"
-		></div>
-	</body>
-</html>
+</body></html>
