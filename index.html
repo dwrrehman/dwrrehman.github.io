@@ -50,15 +50,15 @@
 
 		const help_message = "\
 		<br>\
-		h [cmd]  :   help: help manual <br>\
-		a (file) :   about: display file info <br>\
-		w 	 :   where: print current directory <br>\
-		e        :   edit: unimplemented <br>\
-		f [file] :   file: display file <br>\
-		j [file] :   jump: change directory (default /)<br>\
-		i (file) :   insp: unimplemented <br>\
-		o (file) :   open: open media file (unix: less) <br>\
-		l	 :   clear: clear screen (unix: clear) <br>\
+		h [cmd]  :  help: help manual <br>\
+		a (file) :  about: display file info <br>\
+		w        :  where: print current directory <br>\
+		e        :  edit: unimplemented <br>\
+		f [file] :  file: display file <br>\
+		j [file] :  jump: change directory (default /)<br>\
+		i (file) :  insp: unimplemented <br>\
+		o (file) :  open: open media file (unix: less) <br>\
+		l        :  clear: clear screen (unix: clear) <br>\
 		<br>"
 
 		const manual = ["manual/help.txt",  "manual/about.txt", "manual/where.txt", "manual/edit.txt", 
@@ -143,6 +143,7 @@
   			xmlhttp.open("GET", path, false);
   			xmlhttp.send();
   			if (xmlhttp.status == 200) result = xmlhttp.responseText;
+			else result = xmlhttp.responseText;
 			return result;
 		}
 
