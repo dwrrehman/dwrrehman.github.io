@@ -65,7 +65,6 @@
 				"manual/file.txt",  "manual/jump.txt", "manual/i.txt",     "manual/o.txt", "manual/clear.txt"]
 
 
-
 		var terminal = null
 		var current_directory = "/"
 
@@ -98,7 +97,7 @@
 			else if (command === "e") return "file-view-command unimplemented.<br>"
 
 			// file command
-			else if (command === "f") return terminal.innerText += file_contents("manual")
+			else if (command === "f") return terminal.innerText += file_contents("manual/")
 
 			// jump command
 			else if (command === "j") return "jump-command unimplemented.<br>";
@@ -143,7 +142,7 @@
   			xmlhttp.open("GET", path, false);
   			xmlhttp.send();
   			if (xmlhttp.status == 200) result = xmlhttp.responseText;
-			else result = xmlhttp.responseText;
+			else if (xmlhttp.status == 404) result = "error: 404: file not found"
 			return result;
 		}
 
