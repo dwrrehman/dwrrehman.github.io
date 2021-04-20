@@ -1,6 +1,6 @@
 _index.txt
+art
+blog
 documents
-images
 index.html
-manual
-music
+links

@@ -1,4 +1,6 @@
 _index.txt
+code
 music
+poetry
+short_stories
 visual
-writing
