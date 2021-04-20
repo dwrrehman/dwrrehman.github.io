@@ -117,6 +117,9 @@
 
 			// jump command
 			else if (c === "j") {
+
+				let save = pwd;
+
 				if (arg === "") {
 					pwd = "/"
 					return ""
@@ -131,7 +134,23 @@
 							pwd = pwd.slice(0, -1)
 							pwd = pwd.slice(0, pwd.lastIndexOf("/") + 1)
 						}
-					} else pwd += part + "/"
+					} else {
+						let valid = false;
+						files = text_to_html(file_contents((pwd + "_index.txt").substring(1))).split("\n")
+						for (const file of files) {
+							if (file.indexOf('.') === -1) {
+								if (file === part)
+									valid = true;
+							}
+						}
+						
+						if (valid === true) 
+							pwd += part + "/"
+						else {
+							pwd = save;
+							return "error: no such directory \"" + part + "\""
+						}
+					}
 				}
 				return ""
 			}
@@ -178,7 +197,7 @@
   			xmlhttp.open("GET", path, false);
   			xmlhttp.send();
   			if (xmlhttp.status == 200) result = xmlhttp.responseText;
-			else if (xmlhttp.status == 404) result = "error: 404: file not found : '" + path + "'"
+			else if (xmlhttp.status == 404) result = "error: 404: file not found : \"" + path + "\""
 			return result;
 		}
 
