@@ -1,5 +1,5 @@
-_index.txt
 code
+index.txt
 music
 poetry
 short_stories

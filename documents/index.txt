@@ -1,3 +1,4 @@
-_index.txt
+index.txt
 manual
-old
+notebooks
+tbs
