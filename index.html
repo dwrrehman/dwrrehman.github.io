@@ -96,9 +96,11 @@
 			else if (command === "e") return "file-view-command unimplemented.<br>"
 
 			// file command
-			else if (command === "f") return text_to_html(file_contents("manual/__index__.txt"))
+			else if (command === "f") 
+	return text_to_html(file_contents("manual/index.txt"))
 
-			else if (command === "k") return text_to_html(file_contents("/manual/__index__.txt"))
+			else if (command === "k") 
+	return text_to_html(file_contents("manual/index.txt"))
 
 			// jump command
 			else if (command === "j") return "jump-command unimplemented.<br>";
