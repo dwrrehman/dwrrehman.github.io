@@ -77,7 +77,8 @@
 			let arg = command.substring(2);
 		
 			// empty command:
-			if (c === "nbsp;") return "";	
+			if (c === "nbsp;" || c === "") return "";
+
 
 			// help command:
 			else if (c === "h") {
@@ -91,6 +92,7 @@
 				else if (arg === "i") return text_to_html(file_contents(manual[6]));
 				else if (arg === "o") return text_to_html(file_contents(manual[7]));
 				else if (arg === "l") return text_to_html(file_contents(manual[8]));
+				else return "?<br>"
 			}
 
 			// about command:
@@ -106,20 +108,32 @@
 			else if (c === "f") {
 				
 				if (arg === "")
-				return text_to_html(file_contents(pwd + "_index.txt"))
-				else return "command mode unimpl.<br>"
+					return text_to_html(file_contents((pwd + "_index.txt").substring(1)))
+				else
+					return "command mode unimpl.<br>"
 			}
 
 			else if (c === "k") return "DEBUG FUNCTION: don't use this lol<br>"
 
 			// jump command
 			else if (c === "j") {
-				if (arg === "") pwd = "/"
-				else if (arg === ".") {}
-				else if (arg === "..") {
-					pwd = pwd.slice(0, -1).slice(0, pwd.lastIndexOf("/"));
-				} else pwd += arg + "/";
-				return "";
+				if (arg === "") {
+					pwd = "/"
+					return ""
+				}
+
+				array = arg.split("/")
+				
+				for (const part of array) {
+					if (part === "" || part === ".") {}
+					else if (part === "..") {
+						if (pwd !== "/") {
+							pwd = pwd.slice(0, -1)
+							pwd = pwd.slice(0, pwd.lastIndexOf("/") + 1)
+						}
+					} else pwd += part + "/"
+				}
+				return ""
 			}
 			
 			// inspect command
@@ -132,8 +146,10 @@
 			else if (c === "l") { terminal.innerHTML = ""; return ""; }
 
 			// unknown command:
-			else return "?<br>"
+			return "?<br>"
 		}
+
+		// if (arg.slice(-1) === "/") arg = arg.slice(0, -1)
 
 		function text_to_html(html) {
 			let text = ""
@@ -189,6 +205,14 @@
 			terminal = document.getElementById("terminal")
 			terminal.innerHTML = welcome_message + prompt_emblem + "&nbsp;"
 			document.addEventListener('keyup', input, false);
+
+			terminal.focus();
+			var range = document.createRange();
+			range.selectNodeContents(terminal);
+			range.collapse(false);
+			var sel = window.getSelection();
+			sel.removeAllRanges();
+			sel.addRange(range);
 		}
 	</script>
 </head> 
@@ -203,3 +227,9 @@
 	></div>
 
 </body></html>
+
+
+
+
+
+
