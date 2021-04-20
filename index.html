@@ -51,7 +51,7 @@
 		const help_message = "\
 		<br>\
 		h [cmd]  :  help: help manual <br>\
-		a (file) :  about: display file info <br>\
+		a (file) :  about: unimplemented <br>\
 		w        :  where: print current directory <br>\
 		e        :  edit: unimplemented <br>\
 		f [file] :  file: display file <br>\
@@ -66,7 +66,7 @@
 
 
 		var terminal = null
-		var current_directory = "/"
+		var current_directory = ""
 
 
 		function run(command) {
@@ -87,17 +87,18 @@
 			else if (command === "h l") return text_to_html(file_contents(manual[8]));
 			
 			// about command:
-			else if (command === "a") return "about command unimpemented. <br>"
+			else if (command === "a") return "command unimpemented. <br>"
 			
-
 			// where command: (pwd)
-			else if (command === "w") return current_directory + "<br>"
+			else if (command === "w") return "/" + current_directory + "<br>"
 
 			// edit command (unimplemented)
 			else if (command === "e") return "file-view-command unimplemented.<br>"
 
 			// file command
-			else if (command === "f") return terminal.innerText += file_contents("manual/")
+			else if (command === "f") return text_to_html(file_contents("manual/__index__.txt"))
+
+			else if (command === "k") return text_to_html(file_contents("/manual/__index__.txt"))
 
 			// jump command
 			else if (command === "j") return "jump-command unimplemented.<br>";
@@ -155,7 +156,7 @@
 				terminal.innerHTML += "<br>"
 				let output = run(command)
 				terminal.innerHTML += output + prompt_emblem + "&nbsp;"
-			} 
+			}
 			terminal.focus();
 			var range = document.createRange();
 			range.selectNodeContents(terminal);
