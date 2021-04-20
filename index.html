@@ -46,27 +46,20 @@
 
 		const welcome_message = "\
 		This is the terminal interface for Daniel Rehman's website. (version 0.0.4) <br>\
-		Type \"h\" for more info.<br>";
+		Type \"help\" for more info.<br>";
 
 		const help_message = "\
 		<br>\
-		h [cmd]  :  help: help manual <br>\
-		a        :  about: unimplemented <br>\
-		w        :  where: print current directory <br>\
-		e (file) :  edit: unimplemented <br>\
-		f [file] :  file: display file <br>\
-		j [file] :  jump: change directory (default /)<br>\
-		i (file) : insp: unimplemented <br>\
-		o (file) :  open: open media file (unix: less) <br>\
-		l        :  clear: clear screen (unix: clear) <br>\
+		help [cmd] :  help manual (unix man) (abbrev: h) <br>\
+		where : print current directory (unix pwd) (abbrev: w) <br>\
+		show (file) : display text file contents (unix cat) (abbrev: e) <br>\
+		list [file] : list files (unix: ls) (abbrev: f) <br>\
+		jump [file] : change directory (unix cd) (abbrev: j) <br>\
+		open (file) : open media file in new window (abbrev: o) <br>\
+		--- :  unimplemented <br>\
+		--- :  unimplemented <br>\
+		clear : clear screen (unix clear) <br>\
 		<br>"
-
-		
-		const manual = ["/documents/manual/help.txt",  "/documents/manual/about.txt", 
-				"/documents/manual/where.txt", "/documents/manual/edit.txt", 
-				"/documents/manual/file.txt",  "/documents/manual/jump.txt", 
-				"/documents/manual/i.txt",     "/documents/manual/o.txt", 
-				"/documents/manual/clear.txt"]
 
 		var terminal = null
 		var pwd = "/"
@@ -82,42 +75,62 @@
 
 			if (c === "" || c === "nbsp;") return "";
 
-			else if (c === "l") { terminal.innerHTML = ""; return ""; }
+			else if (c === "l" || c === "clear") { terminal.innerHTML = ""; return ""; }
 
-			else if (c === "w") return pwd + "<br>"
+			else if (c === "w" || c === "show") return pwd + "<br>"
 
-			else if (c === "e") {
+			else if (c === "e" || c === "cat" || c === "show") {
 				if (arg === "") return "error: filename argument required<br>"
 				return text_to_html(file_contents(pwd + arg))
 			
-			} else if (c === "f" || c === "ls")  {
+			} else if (c === "f" || c === "ls" || c === "list")  {
 				if (arg !== "") arg += "/"
 				return text_to_html(file_contents(pwd + arg + "index.txt")) 
 			}
 
-			else if (c === "i") {
+			else if (c === "o" || c === "open" ) {
 				if (arg === "") return "error: filename argument required<br>"
 				window.open(pwd + arg)
 				return ""
 			}
 
-			else if (c === "h") {
+			else if (c === "h" || c === "man" || c === "help") {
+
 				if (arg == "") return help_message
-				else if (arg === "h") return text_to_html(file_contents(manual[0]));
-				else if (arg === "a") return text_to_html(file_contents(manual[1]));
-				else if (arg === "w") return text_to_html(file_contents(manual[2]));
-				else if (arg === "e") return text_to_html(file_contents(manual[3]));
-				else if (arg === "f") return text_to_html(file_contents(manual[4]));
-				else if (arg === "j") return text_to_html(file_contents(manual[5]));
-				else if (arg === "i") return text_to_html(file_contents(manual[6]));
-				else if (arg === "o") return text_to_html(file_contents(manual[7]));
-				else if (arg === "l") return text_to_html(file_contents(manual[8]));
+
+				else if (arg === "help") 
+					return text_to_html(file_contents("/documents/manual/help.txt"));
+
+				else if (arg === "about") 
+					return text_to_html(file_contents("/documents/manual/about.txt"));
+
+				else if (arg === "where") 
+					return text_to_html(file_contents("/documents/manual/where.txt"));
+
+				else if (arg === "show") 
+					return text_to_html(file_contents("/documents/manual/show.txt"));
+
+				else if (arg === "list") 
+					return text_to_html(file_contents("/documents/manual/list.txt"));
+
+				else if (arg === "jump") 
+					return text_to_html(file_contents("/documents/manual/jump.txt"));
+
+				else if (arg === "inspect") 
+					return text_to_html(file_contents("/documents/manual/inspect.txt"));
+
+				else if (arg === "open") 
+					return text_to_html(file_contents("/documents/manual/open.txt"));
+
+				else if (arg === "clear") 
+					return text_to_html(file_contents("/documents/manual/clear.txt"));
+
 				else return "error: no manual entry for \"" + arg + "\".<br>"
 			}
 
 			
 
-			else if (c === "j" || c === "cd") {
+			else if (c === "j" || c === "cd" || c === "jump") {
 
 				let save = pwd
 				if (arg === "") { pwd = "/"; return "" }
@@ -145,8 +158,8 @@
 				return ""
 			}
 			
-			// open command?
-			else if (c === "o") return "command unimplemented. <br> "
+			// inspect command?
+			else if (c === "i") return "command unimplemented. <br> "
 
 			// about command?
 			else if (c === "a") return "command unimpemented. <br>"
