@@ -136,7 +136,7 @@
 						}
 					} else {
 						let valid = false;
-						files = text_to_html(file_contents((pwd + "_index.txt").substring(1))).split("\n")
+						files = file_contents((pwd + "_index.txt").substring(1)).split("\n")
 						for (const file of files) {
 							if (file.indexOf('.') === -1) {
 								if (file === part)
