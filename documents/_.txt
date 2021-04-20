@@ -1,6 +1,0 @@
-_index.txt
-art
-blog
-documents
-index.html
-links
