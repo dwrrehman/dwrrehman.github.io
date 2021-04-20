@@ -173,7 +173,7 @@
 		function file_contents(path) {
   			var result = null;
   			var xmlhttp = new XMLHttpRequest();
-  			xmlhttp.open("GET", "./" + path, false);
+  			xmlhttp.open("GET", path, false);
   			xmlhttp.send();
   			if (xmlhttp.status == 200) result = xmlhttp.responseText;
 			else if (xmlhttp.status == 404) result = "error: 404: file not found : \"" + path + "\""
