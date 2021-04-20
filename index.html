@@ -62,19 +62,20 @@
 		<br>"
 
 		
-		const manual = ["manual/help.txt",  "manual/about.txt", 
-				"manual/where.txt", "manual/edit.txt", 
-				"manual/file.txt",  "manual/jump.txt", 
-				"manual/i.txt", "manual/o.txt", 
-				"manual/clear.txt"]
+		const manual = ["documents/manual/help.txt",  "documents/manual/about.txt", 
+				"documents/manual/where.txt", "documents/manual/edit.txt", 
+				"documents/manual/file.txt",  "documents/manual/jump.txt", 
+				"documents/manual/i.txt", "documents/manual/o.txt", 
+				"documents/manual/clear.txt"]
 
 		var terminal = null
 		var pwd = "/"
 
 		function run(command) {
 
-			let c = command[0];
-			let arg = command.substring(2);
+			let command_parts = command.split(" ")
+			let c = command_parts[0]
+			let arg = command_parts[1]
 		
 			// empty command:
 			if (c === "nbsp;" || c === "") return "";
@@ -98,36 +99,15 @@
 			// about command:
 			else if (c === "a") return "command unimpemented. <br>"
 			
-			// where command: (pwd)
+
 			else if (c === "w") return pwd + "<br>"
-
-			// edit command (unimplemented)
-			else if (c === "e") return "file-view-command unimplemented.<br>"
-
-			// file command
-			else if (c === "f") {
-				
-				if (arg === "")
-					return text_to_html(file_contents((pwd + "_index.txt").substring(1)))
-				else
-					return "command mode unimpl.<br>"
-			}
-
-			else if (c === "k") return "DEBUG FUNCTION: don't use this lol<br>"
-
-			// jump command
+			else if (c === "e") return text_to_html(file_contents((pwd + arg).substring(1)))
+			else if (c === "f") return text_to_html(file_contents((pwd + arg + "_index.txt").substring(1)))
 			else if (c === "j") {
 
-				let save = pwd;
-
-				if (arg === "") {
-					pwd = "/"
-					return ""
-				}
-
-				array = arg.split("/")
-				
-				for (const part of array) {
+				let save = pwd
+				if (arg === "") { pwd = "/"; return "" }
+				for (const part of arg.split("/")) {
 					if (part === "" || part === ".") {}
 					else if (part === "..") {
 						if (pwd !== "/") {
@@ -137,18 +117,13 @@
 					} else {
 						let valid = false;
 						files = file_contents((pwd + "_index.txt").substring(1)).split("\n")
-						for (const file of files) {
-							if (file.indexOf('.') === -1) {
-								if (file === part)
-									valid = true;
-							}
-						}
-						
-						if (valid === true) 
-							pwd += part + "/"
+						for (const file of files) 
+							if (file.indexOf('.') === -1 && file === part) valid = true;
+
+						if (valid === true) pwd += part + "/"
 						else {
 							pwd = save;
-							return "error: no such directory \"" + part + "\""
+							return "jump: no such directory \"" + arg + "\"<br>"
 						}
 					}
 				}
