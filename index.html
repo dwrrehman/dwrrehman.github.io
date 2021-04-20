@@ -71,7 +71,7 @@
 		var terminal = null
 		var pwd = "/"
 
-		function run() {
+		function run(command) {
 
 			let c = command[0];
 			let arg = command.substring(2);
@@ -127,8 +127,6 @@
 
 			// open command
 			else if (c === "o") return "open command unimplemented.<br>";
-
-
 
 			// clear command:
 			else if (c === "l") { terminal.innerHTML = ""; return ""; }
