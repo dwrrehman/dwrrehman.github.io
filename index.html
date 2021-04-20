@@ -62,11 +62,11 @@
 		<br>"
 
 		
-		const manual = ["documents/manual/help.txt",  "documents/manual/about.txt", 
-				"documents/manual/where.txt", "documents/manual/edit.txt", 
-				"documents/manual/file.txt",  "documents/manual/jump.txt", 
-				"documents/manual/i.txt", "documents/manual/o.txt", 
-				"documents/manual/clear.txt"]
+		const manual = ["/documents/manual/help.txt",  "/documents/manual/about.txt", 
+				"/documents/manual/where.txt", "/documents/manual/edit.txt", 
+				"/documents/manual/file.txt",  "/documents/manual/jump.txt", 
+				"/documents/manual/i.txt",     "/documents/manual/o.txt", 
+				"/documents/manual/clear.txt"]
 
 		var terminal = null
 		var pwd = "/"
@@ -75,12 +75,12 @@
 
 			let command_parts = command.split(" ")
 			let c = command_parts[0]
-			if (c === undefined) c = ""
+			if (command_parts.length > 0) c = command_parts[0]
 
-			let arg = command_parts[1]
-			if (arg === undefined) arg = ""
+			let arg = ""
+			if (command_parts.length > 1) arg = command_parts[1]
 			
-			console.log(command_parts);
+			console.log(command_parts, c, arg);
 
 			if (c === "" || c === "nbsp;") return "";
 
@@ -105,12 +105,12 @@
 
 			else if (c === "e")
 				if (arg !== "")
-					return text_to_html(file_contents((pwd + arg).substring(1)))
+					return text_to_html(file_contents(pwd + arg))
 				else return "error: filename argument required<br>"
 
 			else if (c === "f" || c === "ls" || c === "sl")  {
-				//if (arg !== "") arg += "/"
-				return text_to_html(file_contents("_index.txt")) //(pwd + arg + "_index.txt").substring(1))
+				if (arg !== "") arg += "/"
+				return text_to_html(file_contents(pwd + arg + "_index.txt")) 
 			}
 
 			else if (c === "j" || c === "cd") {
@@ -126,7 +126,7 @@
 						}
 					} else {
 						let valid = false;
-						files = file_contents((pwd + "_index.txt").substring(1)).split("\n")
+						files = file_contents(pwd + "_index.txt").split("\n")
 						for (const file of files) 
 							if (file.indexOf('.') === -1 && file === part) valid = true;
 
