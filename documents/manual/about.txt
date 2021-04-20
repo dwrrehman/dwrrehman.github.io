@@ -1,0 +1,26 @@
+
+  manual for a ("about"):
+__________________________
+
+usage:
+
+	a (unimplemented)
+
+inputs: 
+
+	unimplemented.
+
+output: 
+
+	unimplemented.
+
+examples:
+
+	:: a file.txt        (unimplemented)
+	
+			
+notes:
+
+	unimplemented.
+
+(end)
