@@ -61,58 +61,77 @@
 		l        :  clear: clear screen (unix: clear) <br>\
 		<br>"
 
-		const manual = ["manual/help.txt",  "manual/about.txt", "manual/where.txt", "manual/edit.txt", 
-				"manual/file.txt",  "manual/jump.txt", "manual/i.txt",     "manual/o.txt", "manual/clear.txt"]
-
+		
+		const manual = ["manual/help.txt",  "manual/about.txt", 
+				"manual/where.txt", "manual/edit.txt", 
+				"manual/file.txt",  "manual/jump.txt", 
+				"manual/i.txt", "manual/o.txt", 
+				"manual/clear.txt"]
 
 		var terminal = null
-		var current_directory = ""
+		var pwd = "/"
 
+		function run() {
 
-		function run(command) {
-
+			let c = command[0];
+			let arg = command.substring(2);
+		
 			// empty command:
-			if (command === "nbsp;") return "";	
+			if (c === "nbsp;") return "";	
 
 			// help command:
-			else if (command === "h") return help_message
-			else if (command === "h h") return text_to_html(file_contents(manual[0]));
-			else if (command === "h a") return text_to_html(file_contents(manual[1]));
-			else if (command === "h w") return text_to_html(file_contents(manual[2]));
-			else if (command === "h e") return text_to_html(file_contents(manual[3]));
-			else if (command === "h f") return text_to_html(file_contents(manual[4]));
-			else if (command === "h j") return text_to_html(file_contents(manual[5]));
-			else if (command === "h i") return text_to_html(file_contents(manual[6]));
-			else if (command === "h o") return text_to_html(file_contents(manual[7]));
-			else if (command === "h l") return text_to_html(file_contents(manual[8]));
-			
+			else if (c === "h") {
+				if (arg == "") return help_message
+				else if (arg === "h") return text_to_html(file_contents(manual[0]));
+				else if (arg === "a") return text_to_html(file_contents(manual[1]));
+				else if (arg === "w") return text_to_html(file_contents(manual[2]));
+				else if (arg === "e") return text_to_html(file_contents(manual[3]));
+				else if (arg === "f") return text_to_html(file_contents(manual[4]));
+				else if (arg === "j") return text_to_html(file_contents(manual[5]));
+				else if (arg === "i") return text_to_html(file_contents(manual[6]));
+				else if (arg === "o") return text_to_html(file_contents(manual[7]));
+				else if (arg === "l") return text_to_html(file_contents(manual[8]));
+			}
+
 			// about command:
-			else if (command === "a") return "command unimpemented. <br>"
+			else if (c === "a") return "command unimpemented. <br>"
 			
 			// where command: (pwd)
-			else if (command === "w") return "/" + current_directory + "<br>"
+			else if (c === "w") return pwd + "<br>"
 
 			// edit command (unimplemented)
-			else if (command === "e") return "file-view-command unimplemented.<br>"
+			else if (c === "e") return "file-view-command unimplemented.<br>"
 
 			// file command
-			else if (command === "f") 
-	return text_to_html(file_contents("manual/index.txt"))
+			else if (c === "f") {
+				
+				if (arg === "")
+				return text_to_html(file_contents(pwd + "_index.txt"))
+				else return "command mode unimpl.<br>"
+			}
 
-			else if (command === "k") 
-	return text_to_html(file_contents("manual/index.txt"))
+			else if (c === "k") return "DEBUG FUNCTION: don't use this lol<br>"
 
 			// jump command
-			else if (command === "j") return "jump-command unimplemented.<br>";
+			else if (c === "j") {
+				if (arg === "") pwd = "/"
+				else if (arg === ".") {}
+				else if (arg === "..") {
+					pwd = pwd.slice(0, -1).slice(0, pwd.lastIndexOf("/"));
+				} else pwd += arg + "/";
+				return "<br>";
+			}
 			
 			// inspect command
-			else if (command === "i") return  "uhndefined <br> "
+			else if (c === "i") return  "inspect command unimplemented. <br> "
 
 			// open command
-			else if (command === "o") return "open command unimplemented.<br>";
+			else if (c === "o") return "open command unimplemented.<br>";
+
+
 
 			// clear command:
-			else if (command === "l") { terminal.innerHTML = ""; return ""; }
+			else if (c === "l") { terminal.innerHTML = ""; return ""; }
 
 			// unknown command:
 			else return "?<br>"
