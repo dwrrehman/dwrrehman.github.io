@@ -76,6 +76,7 @@
 			let command_parts = command.split(" ")
 			let c = command_parts[0]
 			let arg = command_parts[1]
+			if (arg === undefined) arg = ""
 		
 			// empty command:
 			if (c === "nbsp;" || c === "") return "";
