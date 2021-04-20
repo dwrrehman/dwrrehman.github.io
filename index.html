@@ -45,7 +45,7 @@
 		const prompt_emblem = "::"
 
 		const welcome_message = "\
-		This is the terminal interface for Daniel Rehman's website. (version 0.0.0) <br>\
+		This is the terminal interface for Daniel Rehman's website. (version 0.0.1) <br>\
 		Type \"h\" for more info.<br>";
 
 		const help_message = "\
@@ -112,6 +112,29 @@
 				if (arg !== "") arg += "/"
 				return text_to_html(file_contents(pwd + arg + "_index.txt")) 
 			}
+
+
+			
+			else if (c === "k0") return text_to_html(file_contents("/my.txt")) 
+			else if (c === "k1") return text_to_html(file_contents("/_index.txt")) 
+			else if (c === "k2") return text_to_html(file_contents("/_.txt")) 
+			else if (c === "k3") return text_to_html(file_contents("/index.txt")) 
+
+			else if (c === "k4") return text_to_html(file_contents("my.txt")) 
+			else if (c === "k5") return text_to_html(file_contents("_index.txt")) 
+			else if (c === "k6") return text_to_html(file_contents("_.txt")) 
+			else if (c === "k7") return text_to_html(file_contents("index.txt")) 
+
+			else if (c === "k8") return text_to_html(file_contents("documents/my.txt")) 
+			else if (c === "k9") return text_to_html(file_contents("documents/_index.txt")) 
+			else if (c === "k10") return text_to_html(file_contents("documents/_.txt")) 
+			else if (c === "k12") return text_to_html(file_contents("documents/index.txt")) 
+	
+			else if (c === "k12") return text_to_html(file_contents("/documents/my.txt")) 
+			else if (c === "k13") return text_to_html(file_contents("/documents/_index.txt")) 
+			else if (c === "k14") return text_to_html(file_contents("/documents/_.txt")) 
+			else if (c === "k15") return text_to_html(file_contents("/documents/index.txt")) 
+
 
 			else if (c === "j" || c === "cd") {
 
