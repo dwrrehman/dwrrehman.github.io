@@ -23,44 +23,20 @@
 	</style>
 	<script> 
 
-		// const example_html_string = "\
-		// listing not available right now.<br>\
-		// <a href='https://www.w3schools.com'>https://www.w3schools.com</a><br>\
-		// <img src='dog.JPG' title='this is a dog' width='128' height='128'><br>"
-		//  <img> tag.
-		//  <iframe> tag.
-		//  <video> and <audio>  tag
-		// 
-
-	/*		<object data="/path_to_text_file/text.txt" type="text/plain"
-		width="500" style="height: 300px">
-		<a href="/path_to_text_file/text.txt">No Support?</a>
-			</object>
-
-	// "<iframe src=\"text.txt\" id=\"terminal\" frameborder=\"0\" \
-		// height=\"400\" width=\"600\" ></iframe> <br>"
-	*/
-
-
 		const prompt_emblem = "::"
-
 		const welcome_message = "\
-		This is the terminal interface for Daniel Rehman's website. (version 0.0.4) <br>\
+		This is Daniel W. R. Rehman's website. (version 0.0.5) <br>\
 		Type \"help\" for more info.<br>";
-
 		const help_message = "\
 		<br>\
 		help [cmd] :  help manual (unix man) (abbrev: h) <br>\
+		clear : clear screen (unix clear) <br>\
 		where : print current directory (unix pwd) (abbrev: w) <br>\
 		show (file) : display text file contents (unix cat) (abbrev: e) <br>\
 		list [file] : list files (unix: ls) (abbrev: f) <br>\
 		jump [file] : change directory (unix cd) (abbrev: j) <br>\
 		open (file) : open media file in new window (abbrev: o) <br>\
-		--- :  unimplemented <br>\
-		--- :  unimplemented <br>\
-		clear : clear screen (unix clear) <br>\
 		<br>"
-
 		var terminal = null
 		var pwd = "/"
 
@@ -71,7 +47,8 @@
 			let arg = ""
 			if (command_parts.length > 0) c = command_parts[0]			
 			if (command_parts.length > 1) arg = command_parts[1]
-			console.log(command_parts, c, arg);
+
+			console.log(command_parts, c, arg)
 
 			if (c === "" || c === "nbsp;") return "";
 
@@ -99,36 +76,34 @@
 				if (arg == "") return help_message
 
 				else if (arg === "help") 
-					return text_to_html(file_contents("/documents/manual/help.txt"));
+					return text_to_html(file_contents("/documents/manual/help.txt"))
 
 				else if (arg === "about") 
-					return text_to_html(file_contents("/documents/manual/about.txt"));
+					return text_to_html(file_contents("/documents/manual/about.txt"))
 
 				else if (arg === "where") 
-					return text_to_html(file_contents("/documents/manual/where.txt"));
+					return text_to_html(file_contents("/documents/manual/where.txt"))
 
 				else if (arg === "show") 
-					return text_to_html(file_contents("/documents/manual/show.txt"));
+					return text_to_html(file_contents("/documents/manual/show.txt"))
 
 				else if (arg === "list") 
-					return text_to_html(file_contents("/documents/manual/list.txt"));
+					return text_to_html(file_contents("/documents/manual/list.txt"))
 
 				else if (arg === "jump") 
-					return text_to_html(file_contents("/documents/manual/jump.txt"));
+					return text_to_html(file_contents("/documents/manual/jump.txt"))
 
 				else if (arg === "inspect") 
-					return text_to_html(file_contents("/documents/manual/inspect.txt"));
+					return text_to_html(file_contents("/documents/manual/inspect.txt"))
 
 				else if (arg === "open") 
-					return text_to_html(file_contents("/documents/manual/open.txt"));
+					return text_to_html(file_contents("/documents/manual/open.txt"))
 
 				else if (arg === "clear") 
-					return text_to_html(file_contents("/documents/manual/clear.txt"));
+					return text_to_html(file_contents("/documents/manual/clear.txt"))
 
 				else return "error: no manual entry for \"" + arg + "\".<br>"
 			}
-
-			
 
 			else if (c === "j" || c === "cd" || c === "jump") {
 
@@ -143,17 +118,19 @@
 							pwd = pwd.slice(0, pwd.lastIndexOf("/") + 1)
 						}
 					} else {
-						let valid = false;
+						let valid = false
 						files = file_contents(pwd + "index.txt").split("\n")
 						for (const file of files) 
-							if (file.indexOf('.') === -1 && file === part) valid = true;
+							if (file.indexOf('.') === -1 && file === part) valid = true
 
-						if (valid === true) pwd += part + "/"
+						if (valid) pwd += part + "/"
 						else {
 							pwd = save;
 							return "jump: no such directory \"" + arg + "\"<br>"
 						}
 					}
+
+					
 				}
 				return ""
 			}
@@ -173,62 +150,63 @@
 				if (html[i] === '\n') text += "<br>"
 				else if (html[i] === '\t') text += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
 				else if (html[i] === ' ' && html[i + 1] === ' ') text += "&nbsp;"
-				else text += html[i];
+				else text += html[i]
 			}
 			return text
 		}
-		
-		/*function append_file_async(path) {
-  			var xhttp = new XMLHttpRequest();
-  			xhttp.onreadystatechange = function() {
-    				if (this.readyState == 4 && this.status == 200) 
-					terminal.innerHTML += text_to_html(this.responseText);
-			};
-  			xhttp.open("GET", path, true);
-  			xhttp.send();
-		}*/
-
+	
 		function file_contents(path) {
-  			var result = null;
-  			var xmlhttp = new XMLHttpRequest();
-  			xmlhttp.open("GET", path + "?_=" + new Date().getTime(), false);
-  			xmlhttp.send();
-  			if (xmlhttp.status == 200) result = xmlhttp.responseText;
-			else if (xmlhttp.status == 404) result = "error: 404: file not found : \"" + path + "\""
-			return result;
+  			var result = null
+  			var xmlhttp = new XMLHttpRequest()
+  			xmlhttp.open("GET", path + "?_=" + new Date().getTime(), false)
+			try {
+  				xmlhttp.send()
+				if (xmlhttp.status == 200) result = xmlhttp.responseText
+				else if (xmlhttp.status == 404) result = "error: 404: file not found : \"" + path + "\""
+			} catch (err) {
+				result = "error: " + err + " : \"" + path + "\""
+			}
+  			
+			return result
+		}
+
+		function focus_at_end() {
+			terminal.focus();
+			var range = document.createRange()
+			range.selectNodeContents(terminal)
+			range.collapse(false)
+			var sel = window.getSelection()
+			sel.removeAllRanges()
+			sel.addRange(range)
 		}
 
 		function input(event) {
 			event = event || window.event
+			console.log("key pressed: ", event.key)
+
+			if (event.key === "Tab") {
+				event.preventDefault()
+				// terminal.innerHTML += "&nbsp;&nbsp;&nbsp;&nbsp;" 
+				// ...or perform tab completion.
+			}	
+
 			if (event.key === "Enter") {
-				let start = terminal.innerHTML.lastIndexOf(prompt_emblem) + prompt_emblem.length + 1
-				terminal.innerHTML = terminal.innerHTML.slice(0, -15)
-				let command = terminal.innerHTML.slice(start, terminal.innerHTML.length);
+				event.preventDefault()
 				terminal.innerHTML += "<br>"
+				let command = terminal.innerHTML.slice(
+						terminal.innerHTML.lastIndexOf(prompt_emblem) + 
+						prompt_emblem.length + 1, -4)
 				let output = run(command)
 				terminal.innerHTML += output + prompt_emblem + "&nbsp;"
+				focus_at_end()
 			}
-			terminal.focus();
-			var range = document.createRange();
-			range.selectNodeContents(terminal);
-			range.collapse(false);
-			var sel = window.getSelection();
-			sel.removeAllRanges();
-			sel.addRange(range);
 		}
 
 		window.onload = function() {
 			terminal = document.getElementById("terminal")
 			terminal.innerHTML = welcome_message + prompt_emblem + "&nbsp;"
-			document.addEventListener('keyup', input, false);
-
-			terminal.focus();
-			var range = document.createRange();
-			range.selectNodeContents(terminal);
-			range.collapse(false);
-			var sel = window.getSelection();
-			sel.removeAllRanges();
-			sel.addRange(range);
+			document.addEventListener('keydown', input, false)
+			focus_at_end()
 		}
 	</script>
 </head>
@@ -241,11 +219,4 @@
 	autocorrect="off" 
 	autocapitalize="off"
 	></div>
-
 </body></html>
-
-
-
-
-
-
