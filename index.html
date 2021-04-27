@@ -25,17 +25,17 @@
 
 		const prompt_emblem = "::"
 		const welcome_message = "\
-		This is Daniel W. R. Rehman's website. (version 0.0.5) <br>\
+		This is Daniel W. R. Rehman's website. (version 0.0.6) <br>\
 		Type \"help\" for more info.<br>";
 		const help_message = "\
 		<br>\
-		help [cmd] :  help manual (unix man) (abbrev: h) <br>\
+		help [cmd] :  help manual (unix man) (abbrev h) <br>\
 		clear : clear screen (unix clear) <br>\
-		where : print current directory (unix pwd) (abbrev: w) <br>\
-		show (file) : display text file contents (unix cat) (abbrev: e) <br>\
-		list [file] : list files (unix: ls) (abbrev: f) <br>\
-		jump [file] : change directory (unix cd) (abbrev: j) <br>\
-		open (file) : open media file in new window (abbrev: o) <br>\
+		where : print current directory (unix pwd) (abbrev w) <br>\
+		show (file) : display text file contents (unix cat) (abbrev e) <br>\
+		list [file] : list files (unix ls) (abbrev f) <br>\
+		jump [file] : change directory (unix cd) (abbrev j) <br>\
+		open (file) : open media file in new window (abbrev o) <br>\
 		<br>"
 		var terminal = null
 		var pwd = "/"
@@ -54,7 +54,7 @@
 
 			else if (c === "l" || c === "clear") { terminal.innerHTML = ""; return ""; }
 
-			else if (c === "w" || c === "show") return pwd + "<br>"
+			else if (c === "w" || c === "where" || c === "pwd") return pwd + "<br>"
 
 			else if (c === "e" || c === "cat" || c === "show") {
 				if (arg === "") return "error: filename argument required<br>"
