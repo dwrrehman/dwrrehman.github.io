@@ -27,12 +27,10 @@ let startup = `
 
 let screen = "";
 
-
-
 function update_screen() {
 	document.body.innerHTML = 
 	screen + 
-	"<span><textarea id='in' style='opacity:0; filter:alpha(opacity=0);'></textarea></div></span>"
+	"<span></span><textarea id='in' style='width:100px; opacity:0; filter:alpha(opacity=0);' autofocus></textarea>"
 }
 
 function putstring(s) {	
