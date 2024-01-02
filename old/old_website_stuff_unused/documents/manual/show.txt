@@ -1,0 +1,25 @@
+
+  manual for e ("edit"):
+__________________________
+
+usage:
+
+	e (unimplemented)
+
+inputs: 
+
+	unimplemented.
+
+output: 
+
+	unimplemented.
+
+examples:
+
+	:: e       (unimplemented)
+			
+notes:
+
+	unimplemented.
+
+(end)

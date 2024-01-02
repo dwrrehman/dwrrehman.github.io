@@ -1,0 +1,27 @@
+
+  manual for l ("clear"):
+__________________________
+
+usage:
+
+	l
+
+inputs: 
+
+	simply clears the screen.
+
+	does not touch any data.
+
+output: 
+
+	n/a
+
+examples:
+
+	:: l       (clears the screen)
+			
+notes:
+
+	n/a
+
+(end)

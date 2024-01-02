@@ -1,4 +1,0 @@
-index.txt
-manual
-notebooks
-tbs

@@ -1,0 +1,31 @@
+html, body {
+	margin: 0; 
+	height: 100%; 
+	overflow: hidden
+}
+
+body {
+  white-space: pre;
+  tab-size: 8;
+  font-size: 30px;
+  font-family: Monaco;
+  padding-right: 30px;
+  display: inline-block;
+  background-color: black;
+  color: #f0f0f0; 
+}
+
+body span {
+  height: 30px;
+  margin-bottom: -4px;
+  width: 2px;
+  background: white;
+  opacity: 1;
+  display: inline-block;
+  animation: blink 0.6s linear infinite alternate;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
