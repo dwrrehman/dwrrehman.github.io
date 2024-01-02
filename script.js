@@ -11,18 +11,17 @@ let nvmemory = [];
 let text = [];
 
 let startup = `
-      <img style="height: 140px; width: 140px; vertical-align: middle; border-radius: 35px;" src="https://avatars.githubusercontent.com/u/19484282?v=4" alt="Hello world!" />   <b>Hi! I'm Daniel Rehman!</b>
+   <img style="height: 130px; width: 130px; vertical-align: middle; border-radius: 35px;" src="https://avatars.githubusercontent.com/u/19484282?v=4" alt="Hello world!" />   <b>Hi! I'm Daniel Rehman!</b>
 
-     GitHub:   <a href="https://github.com/dwrrehman">https://github.com/dwrrehman</a>
-     GitLab:   <a href="https://gitlab.com/dwrrehman">https://gitlab.com/dwrrehman</a>
-     LinkedIn: <a href="https://linkedin.com/in/dwrr">https://linkedin.com/in/dwrr</a>
+     GitHub:   <a href="https://github.com/dwrrehman">github.com/dwrrehman</a>
+     GitLab:   <a href="https://gitlab.com/dwrrehman">gitlab.com/dwrrehman</a>
+     LinkedIn: <a href="https://linkedin.com/in/dwrr">linkedin.com/in/dwrr</a>
      Resume:   <a href="./resume.pdf">./resume.pdf</a>
 
-         Feel free to explore my various 
-      programming projects here! by using the
-    unix commands for navigation and browsing.
-		
-	  For help, type "<i>help</i>".
+     Feel free to explore my various 
+   programming projects here! Try using  
+    the unix commands for navigation,
+   or type "<i>help</i>" for more information.
 
 `;
 
@@ -46,15 +45,17 @@ next todos:                use          http://[::]:8000/           to see webpa
 
 */
 
+function update_screen() {
+	document.body.innerHTML = 
+	screen + 
+	"<span>" + "</span>" + 
+	"<div style='width: 0; overflow: hidden;'><textarea id='in' style='opacity:0; filter:alpha(opacity=0);'></textarea></div>"
+}
+
 
 function putstring(s) {	
-	
-	for (let i = 0; i < s.length; i++) {
-		console.log(s.charCodeAt(i));
-		
-	}
 	screen += s;
-	document.body.innerHTML = screen + "<span>" + "</span>"
+	update_screen();
 }
 
 function write_syscall(at, n) {	
@@ -66,12 +67,12 @@ function write_syscall(at, n) {
 
 function backspace() {
 	screen = screen.slice(0, -1); 
-	document.body.innerHTML = screen + "<span>" + "</span>"
+	update_screen();
 }
 
 function getc() {
 	return new Promise(
-		function(resolve) { return document.addEventListener('keydown', resolve, { once: true }); }
+		function(resolve) { return document.body.addEventListener('keydown', resolve, { once: true }); }
 	);
 }
 
@@ -152,10 +153,10 @@ async function svc() {
 
 async function my_program() {
 
-	putstring("Press a key: ");
+	putstring("/:: ");
 	registers[16] = 2n;
 	registers[1]  = 0n;
-	registers[2]  = 50n;
+	registers[2]  = 100n;
 	if (await svc()) return;
 
 	putstring("Pressed: ");
@@ -224,22 +225,13 @@ const main = async () => {
 	console.log(state);
 	if (state._nvmemory) nvmemory = state._nvmemory;
 
-	putstring(startup);
-	document.body.innerHTML = screen + "<span>" + "</span>";
+	document.getElementById('in').focus();
 
+	putstring(startup);
 	execute_program();
 };
 
 main();
-
-
-
-
-
-
-
-
-
 
 
 
