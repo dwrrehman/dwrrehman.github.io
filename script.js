@@ -31,26 +31,31 @@ function update_screen() {
 	document.body.innerHTML = 
 	screen + 
 	"<span></span><textarea id='in' style='width:100px; opacity:0; filter:alpha(opacity=0);' autofocus></textarea>"
+	document.getElementById('in').focus();
 }
 
 function putstring(s) {	
 	screen += s;
 	update_screen();
+	document.getElementById('in').focus();
 }
 
 function write_syscall(at, n) {	
 	let s = "";
 	for (let i = 0; i < n; i++) s += String.fromCharCode(memory[at + i]);
 	putstring(s);
+	document.getElementById('in').focus();
 	return n;
 }
 
 function backspace() {
 	screen = screen.slice(0, -1); 
 	update_screen();
+	document.getElementById('in').focus();
 }
 
 function getc() {
+	document.getElementById('in').focus();
 	return new Promise(
 		function(resolve) { return document.body.addEventListener('keydown', resolve, { once: true }); }
 	);
@@ -64,6 +69,7 @@ async function read_syscall(at, n) {
 	let s = "";
 	while (count < n) {
 		let x = await getc();
+		document.getElementById('in').focus();
 		let c = x.key;
 		     if (c === "Enter") 	{ putstring("\n"); count++; s += "\n"; break; }
 		else if (c === "Tab") 		{ x.preventDefault(); putstring("\t"); count++; s += "\t"; }
@@ -76,6 +82,7 @@ async function read_syscall(at, n) {
 	for (let i = 0; i < count; i++) {
 		memory[at + i] = s[i].charCodeAt(0);
 	}
+	document.getElementById('in').focus();
 
 	return count;
 }
@@ -127,6 +134,7 @@ function save() {
 }
 
 async function svc() {
+	document.getElementById('in').focus();
 	if (registers[16] == 1) return 1;
 	if (registers[16] == 2) registers[0] = BigInt(await read_syscall(Number(registers[1]), Number(registers[2])));
 	if (registers[16] == 3) registers[0] = BigInt(     write_syscall(Number(registers[1]), Number(registers[2])));
@@ -190,6 +198,7 @@ async function execute_program() {
 	nvmemory = new Uint8Array(180);
 	nvmemory.fill(0);
 
+	document.getElementById('in').focus();
 	await my_program();
 }
 
@@ -209,8 +218,9 @@ const main = async () => {
 	if (state._nvmemory) nvmemory = state._nvmemory;
 
 	document.getElementById('in').focus();
-
+	document.getElementById('in').focus();
 	putstring(startup);
+	document.getElementById('in').focus();
 	execute_program();
 };
 
