@@ -28,30 +28,12 @@ let startup = `
 let screen = "";
 
 
-/*
-next todos:                use          http://[::]:8000/           to see webpage.     do ./start first    or    python3 -m http.server 
-
-
-
-
-	- implement a filesystem:   add a simple shell system, using execve, and fork, 
-	- generate the jvascript machine code statements for assembly in our assembler! to emulate arm 64. yay. 
-
-	- make a simple os too?
-
-	- implment a simple editor too!     allow editing any sort of file.      make this thing self programmable. plz. yay. 
-
-	- implement a feature to save the staete of the file system, in order to 
-
-*/
 
 function update_screen() {
 	document.body.innerHTML = 
 	screen + 
-	"<span>" + "</span>" + 
-	"<div style='width: 0; overflow: hidden;'><textarea id='in' style='opacity:0; filter:alpha(opacity=0);'></textarea></div>"
+	"<span><textarea id='in' style='opacity:0; filter:alpha(opacity=0);'></textarea></div></span>"
 }
-
 
 function putstring(s) {	
 	screen += s;
@@ -77,6 +59,9 @@ function getc() {
 }
 
 async function read_syscall(at, n) {
+
+	document.getElementById('in').focus();
+
 	let count = 0;	
 	let s = "";
 	while (count < n) {
@@ -245,6 +230,23 @@ main();
 
 
 
+
+/*
+next todos:                use          http://[::]:8000/           to see webpage.     do ./start first    or    python3 -m http.server 
+
+
+
+
+	- implement a filesystem:   add a simple shell system, using execve, and fork, 
+	- generate the jvascript machine code statements for assembly in our assembler! to emulate arm 64. yay. 
+
+	- make a simple os too?
+
+	- implment a simple editor too!     allow editing any sort of file.      make this thing self programmable. plz. yay. 
+
+	- implement a feature to save the staete of the file system, in order to 
+
+*/
 
 
 
