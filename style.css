@@ -7,8 +7,8 @@ html, body {
 body {
   white-space: pre;
   tab-size: 8;
-  font-size: 40px;
-  font-family: Monaco;
+  font-size: 30px;
+  font-family: Courier New;
   padding-right: 30px;
   display: inline-block;
   background-color: black;
@@ -16,7 +16,7 @@ body {
 }
 
 body span {
-  height: 40px;
+  height: 30px;
   margin-bottom: -4px;
   width: 2px;
   background: white;

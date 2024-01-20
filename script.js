@@ -1,6 +1,6 @@
 // web terminal emulator, that i'm made to be my website. 
 // cuz why not.
-// written on 202401011.202029, by dwrr.
+// written on 1202401011.202029, by dwrr.
 
 let registers = [];
 
@@ -18,10 +18,9 @@ let startup = `
      LinkedIn: <a href="https://linkedin.com/in/dwrr">linkedin.com/in/dwrr</a>
      Resume:   <a href="./resume.pdf">./resume.pdf</a>
 
-     Feel free to explore my various 
-   programming projects here! Try using  
-    the unix commands for navigation,
-   or type "<i>help</i>" for more information.
+     Feel free to explore my programming 
+      projects here! Try using the unix 
+     commands to explore, or type "<i>help</i>".
 
 `;
 
