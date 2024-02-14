@@ -1,0 +1,308 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ----------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+// if (i >= 65536) { putstring("fatal error: program has used all allocated memory"); }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+
+
+
+	
+	registers[16] = 2n;
+	registers[1]  = 0n;
+	registers[2]  = 100n;
+
+	putstring("Pressed: ");
+	registers[16] = 3n;
+	registers[1]  = 0n;
+	registers[2]  = registers[0];
+	if (await svc()) return;
+
+	putstring("Press a key: ");
+	registers[16] = 2n;
+	registers[1]  = 0n;
+	registers[2]  = 50n;
+	if (await svc()) return;
+
+	putstring("Pressed: ");
+	registers[16] = 3n;
+	registers[1]  = 0n;
+	registers[2]  = registers[0];
+	if (await svc()) return;
+
+	putstring("Press a key: ");
+	registers[16] = 2n;
+	registers[1]  = 0n;
+	registers[2]  = 50n;
+	if (await svc()) return;
+
+	putstring("Pressed: ");
+	registers[16] = 3n;
+	registers[1]  = 0n;
+	registers[2]  = registers[0];
+	if (await svc()) return;
+
+
+
+
+
+
+
+
+
+
+
+
+next todos:                use          http://[::]:8000/           to see webpage.     do ./start first    or    python3 -m http.server 
+
+
+
+
+	- implement a filesystem:   add a simple shell system, using execve, and fork, 
+	- generate the jvascript machine code statements for assembly in our assembler! to emulate arm 64. yay. 
+
+	- make a simple os too?
+
+	- implment a simple editor too!     allow editing any sort of file.      make this thing self programmable. plz. yay. 
+
+	- implement a feature to save the staete of the file system, in order to 
+
+*/
+
+
+
+
+
+
+
+
+
+//document.cookie = "state={screen: 't', registers: [0], memory: [0]}; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+
+
+
+
+
+
+//function hexify(arr) {
+//	return Array.from(arr, function(byte) { return ('0' + (byte & 0xFF).toString(16)).slice(-2); }).join('')
+//}
+
+
+
+
+
+
+
+
+
+// document.addEventListener('keydown', inputted, false);
+
+
+
+/*
+
+
+
+function inputted(event) {
+
+	var name = event.key
+	var code = event.code
+
+	if (name === 'Control') {
+		//console.log("control!!");
+		return false;
+	} else if (event.ctrlKey) {
+		//alert(`Combination of ctrlKey + ${name} \n Key code Value: ${code}`);
+		return false;
+	} else if (name !== "Meta") {
+		//alert(`Key pressed ${name} \n Key code Value: ${code}`);
+		return false;
+	}
+
+	if (name === "Enter") screen += "\n"
+	else if (name === "Tab") screen += "\t"
+	else if (name === "Shift") return false;
+	else if (name === "Meta") return false;
+	else if (name === "Alt") return false;
+	else if (name === "Backspace") {
+		screen = screen.slice(0, -1)
+	} else screen += name
+
+	document.body.innerHTML = screen + "<span>" + "</span>"
+
+	event.preventDefault()
+
+	return true;
+}
+
+
+
+
+for (const e of s) {
+		string += e;
+		if (e == "\n") column = 0; else column++;
+		//if (column == 30) { string += "\n"; column = 0; }
+	}
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Daniels placeholder website title</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="script.js"></script>
+  </head>
+  <body><span></span></body>
+</html>
+
+
+
+
+// if you want to add the control key up event...
+
+
+  document.addEventListener('keyup', (event) => {
+    var name = event.key;
+    if (name === 'Control') {
+      alert('Control key released');
+    }
+  }, false);
+*/
+
+
+
+
+
+
+
+
+
+
+
+/*
+document.addEventListener("keyup", detectTabKey);
+
+function detectTabKey(e) {
+    if (e.keyCode == 9) {
+        activeElem = document.activeElement;
+        alert(activeElem.href);
+    }
+}
+
+document.onkeypress = function(evt) {
+	evt = evt || window.event;
+	var code = evt.keyCode || evt.which;
+	var c = String.fromCharCode(code);
+	document.body.textContent += code + " ";
+};
+
+
+
+
+
+export const wasmBrowserInstantiate = async (module, imports) => {
+
+	let response = undefined
+	if (WebAssembly.instantiateStreaming) {
+		response = await WebAssembly.instantiateStreaming(fetch(module), imports)
+	} else {
+		const task = async () => {
+			const wasmArrayBuffer = await fetch(module).then(response => response.arrayBuffer())
+			return WebAssembly.instantiate(wasmArrayBuffer, imports)
+		};
+		response = await task()
+	}
+	return response;
+
+};
+
+const imports = { env: { abort: () => console.log("Abort!") } };
+const m = await wasmBrowserInstantiate("program.wasm", imports);
+const r = m.instance.exports.add(1,2);
+
+
+
+
+
+*/

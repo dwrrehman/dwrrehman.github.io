@@ -1,14 +1,12 @@
-// web terminal emulator, that i'm made to be my website. 
-// cuz why not.
+// web terminal emulator running a rv32-like vm, that i'm made to be my personal website!
+// ....cuz why not.
 // written on 1202401011.202029, by dwrr.
 
+import { executable } from "./program.js";
+
 let registers = [];
-
-let memory = [];
-
 let nvmemory = [];
-
-let text = [];
+let memory = [];
 
 let startup = `
    <img style="height: 130px; width: 130px; vertical-align: middle; border-radius: 35px;" src="https://avatars.githubusercontent.com/u/19484282?v=4" alt="Hello world!" />   <b>Hi! I'm Daniel Rehman!</b>
@@ -109,114 +107,162 @@ function get_cookie(name) {
     return "";
 }
 
-//function hexify(arr) {
-//	return Array.from(arr, function(byte) { return ('0' + (byte & 0xFF).toString(16)).slice(-2); }).join('')
-//}
-
 function save() {
-	let newstate = {
-		_nvmemory: nvmemory,
-	}
+	let newstate = { _nvmemory: nvmemory, }
 	let z = JSON.stringify(newstate);
 	let y = btoa(z);
 	let x = encodeURIComponent(y);
-	console.log(x);
-	console.log(y);
-	console.log(z);
 	save_cookie("state", x, 12);
-
 	let raw = get_cookie("state");
 	decodeURIComponent(raw)
 	let braw = atob(raw);
-	console.log(raw);
-	console.log(braw);
 }
 
-async function svc() {
-	document.getElementById('in').focus();
-	if (registers[16] == 1) return 1;
-	if (registers[16] == 2) registers[0] = BigInt(await read_syscall(Number(registers[1]), Number(registers[2])));
-	if (registers[16] == 3) registers[0] = BigInt(     write_syscall(Number(registers[1]), Number(registers[2])));
-	save();
+async function ecall(x) {
+	if (false) {}
+	else if (x == 0) return 0;
+	else if (x == 1) return 1;
+	else if (x == 2) registers[0] = await read_syscall(registers[1], registers[2]);
+	else if (x == 3) registers[0] = write_syscall(registers[1], registers[2]);
 	return 0;
 }
 
-async function my_program() {
+async function virtual_machine(instruction_count) {
+	let pc = 0; 
+	while (pc < instruction_count) {
 
-	putstring("/:: ");
-	registers[16] = 2n;
-	registers[1]  = 0n;
-	registers[2]  = 100n;
-	if (await svc()) return;
+		let op = memory[pc + 0] | (memory[pc + 1] << 8);
+		let r0 = memory[pc + 2] | (memory[pc + 3] << 8);
+		let r1 = memory[pc + 4] | (memory[pc + 5] << 8);
+		let r2 = memory[pc + 6] | (memory[pc + 7] << 8);
 
-	putstring("Pressed: ");
-	registers[16] = 3n;
-	registers[1]  = 0n;
-	registers[2]  = registers[0];
-	if (await svc()) return;
+		r0 = r0 < 32768 ? r0 : r0 - 65536;
+		r1 = r1 < 32768 ? r1 : r1 - 65536;
+		r2 = r2 < 32768 ? r2 : r2 - 65536;
 
-	putstring("Press a key: ");
-	registers[16] = 2n;
-	registers[1]  = 0n;
-	registers[2]  = 50n;
-	if (await svc()) return;
+		console.log("executing: " + op + " : " + r0 + " : " + r1 + " : " + r2 + "..."); 
 
-	putstring("Pressed: ");
-	registers[16] = 3n;
-	registers[1]  = 0n;
-	registers[2]  = registers[0];
-	if (await svc()) return;
+		if (op == 0) { if (await ecall(r0)) return; } // ecall
 
-	putstring("Press a key: ");
-	registers[16] = 2n;
-	registers[1]  = 0n;
-	registers[2]  = 50n;
-	if (await svc()) return;
+		else if (op == 2)  registers[r0] = registers[r1] + registers[r2]; // add
+		else if (op == 3)  registers[r0] = registers[r1] - registers[r2]; // sub
+		else if (op == 4)  registers[r0] = registers[r1] * registers[r2]; // mul
+		else if (op == 5)  registers[r0] = registers[r1] / registers[r2]; // div
+		else if (op == 6)  registers[r0] = registers[r1] % registers[r2]; // rem
+		else if (op == 7)  registers[r0] = registers[r1] & registers[r2]; // and
+		else if (op == 8)  registers[r0] = registers[r1] | registers[r2]; // or
+		else if (op == 9)  registers[r0] = registers[r1] ^ registers[r2]; // xor
+		else if (op == 10) registers[r0] = registers[r1] < registers[r2]; // slt
+		else if (op == 11) registers[r0] = registers[r1] << registers[r2];// sll
+		else if (op == 12) registers[r0] = registers[r1] >> registers[r2];// srl
 
-	putstring("Pressed: ");
-	registers[16] = 3n;
-	registers[1]  = 0n;
-	registers[2]  = registers[0];
-	if (await svc()) return;
+		else if (op == 13)  registers[r0] = registers[r1] + r2; // addi
+		else if (op == 14)  registers[r0] = registers[r1] - r2; // subi
+		else if (op == 15)  registers[r0] = registers[r1] * r2; // muli
+		else if (op == 16)  registers[r0] = registers[r1] / r2; // divi
+		else if (op == 17)  registers[r0] = registers[r1] % r2; // remi
+		else if (op == 18)  registers[r0] = registers[r1] & r2; // andi
+		else if (op == 19)  registers[r0] = registers[r1] | r2; // ori
+		else if (op == 20)  registers[r0] = registers[r1] ^ r2; // xori
+		else if (op == 21) registers[r0] = registers[r1] < r2; // slti
+		else if (op == 22) registers[r0] = registers[r1] << r2;// slli
+		else if (op == 23) registers[r0] = registers[r1] >> r2;// srli
 
-	screen = startup;
-	save();
+		else if (op == 24) { // lb
+			registers[r0] = memory[registers[r1] + r2];
+		} else if (op == 25) { // lh
+			let m0 = memory[registers[r1] + r2 + 0];
+			let m1 = memory[registers[r1] + r2 + 1];
+			registers[r0] = (m1 << 8) + (m0);
+		} else if (op == 26) { // lw
+			let m0 = memory[registers[r1] + r2 + 0];
+			let m1 = memory[registers[r1] + r2 + 1];
+			let m2 = memory[registers[r1] + r2 + 2];
+			let m3 = memory[registers[r1] + r2 + 3];
+			registers[r0] = (m3 << 24) +  (m2 << 16) +  (m1 << 8) + (m0);
+
+		} else if (op == 27) { // sb
+			memory[registers[r1] + r2] = 0xFF & registers[r0];
+		} else if (op == 28) { // sh
+			memory[registers[r1] + r2 + 0] = 0xFF & registers[r0];
+			memory[registers[r1] + r2 + 1] = 0xFF & (registers[r0] >> 8);
+		} else if (op == 29) { // sw
+			memory[registers[r1] + r2 + 0] = 0xFF & registers[r0];
+			memory[registers[r1] + r2 + 1] = 0xFF & (registers[r0] >> 8);
+			memory[registers[r1] + r2 + 2] = 0xFF & (registers[r0] >> 16);
+			memory[registers[r1] + r2 + 3] = 0xFF & (registers[r0] >> 24);
+		} 
+
+		else if (op == 30) { if (registers[r1] == registers[r2]) pc += r0 * 8; } // beq
+		else if (op == 31) { if (registers[r1] != registers[r2]) pc += r0 * 8; } // bne
+		else if (op == 32) { if (registers[r1] <  registers[r2]) pc += r0 * 8; } // blt
+		else if (op == 33) { if (registers[r1] >= registers[r2]) pc += r0 * 8; } // bge
+		else if (op == 34) { registers[r1] = pc; pc += r0; } // jal
+		else if (op == 35) { registers[r1] = pc; pc = registers[r0]; } // jalr
+
+		else if (op == 40) { // debug instruction
+
+			console.log("-------- registers --------");
+			for (let i = 0; i < registers.length; i++) {
+				if (registers[i] != 0) {
+					console.log("registers[" + i + "] = " + registers[i] + "    ");
+				}
+			}
+
+			console.log("-------- memory --------");
+			for (let i = 0; i < memory.length; i++) {
+				if (memory[i] != 0) {
+					console.log("memory[" + i + "] = " + memory[i] + "    ");
+				}
+			}
+		}
+
+		else { putstring("\nfatal error: unknown instruction opcode: " + op + "\nhow did you get here?..."); }
+
+		pc += 8;
+	}
+	
+	// screen = startup;
+	// save();	
+
+	putstring("[process exited]");
 }
 
 async function execute_program() {
 
-	registers = new BigUint64Array(32);
-	registers.fill(0n);
-
-	memory = new Uint8Array(65000);
-	memory.fill(0);
-
-	text = new Uint8Array(65000);
-	text.fill(0);
-
 	nvmemory = new Uint8Array(180);
 	nvmemory.fill(0);
 
+	registers = new Int32Array(4096);
+	registers.fill(0);
+	
+	memory = new Uint8Array(65536 * 2);
+	memory.fill(0);
+
+	for (let i = 0; i < executable.length; i++) 
+		memory[i] = executable[i]
+
 	document.getElementById('in').focus();
-	await my_program();
+	await virtual_machine(executable.length);
 }
+
+
 
 const main = async () => {
 
 	let raw = get_cookie("state");
 	decodeURIComponent(raw)
 	let braw = atob(raw);
-	console.log(raw);
-	console.log(braw);
+	//console.log(raw);
+	//console.log(braw);
 
 	let state = {}
 	try { state = JSON.parse(braw); } 
 	catch(e) { console.error(e); }
 
-	console.log(state);
+	//console.log(state);
 	if (state._nvmemory) nvmemory = state._nvmemory;
 
-	document.getElementById('in').focus();
 	document.getElementById('in').focus();
 	putstring(startup);
 	document.getElementById('in').focus();
@@ -224,205 +270,3 @@ const main = async () => {
 };
 
 main();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-next todos:                use          http://[::]:8000/           to see webpage.     do ./start first    or    python3 -m http.server 
-
-
-
-
-	- implement a filesystem:   add a simple shell system, using execve, and fork, 
-	- generate the jvascript machine code statements for assembly in our assembler! to emulate arm 64. yay. 
-
-	- make a simple os too?
-
-	- implment a simple editor too!     allow editing any sort of file.      make this thing self programmable. plz. yay. 
-
-	- implement a feature to save the staete of the file system, in order to 
-
-*/
-
-
-
-
-
-
-
-
-
-//document.cookie = "state={screen: 't', registers: [0], memory: [0]}; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// document.addEventListener('keydown', inputted, false);
-
-
-
-/*
-
-
-
-function inputted(event) {
-
-	var name = event.key
-	var code = event.code
-
-	if (name === 'Control') {
-		//console.log("control!!");
-		return false;
-	} else if (event.ctrlKey) {
-		//alert(`Combination of ctrlKey + ${name} \n Key code Value: ${code}`);
-		return false;
-	} else if (name !== "Meta") {
-		//alert(`Key pressed ${name} \n Key code Value: ${code}`);
-		return false;
-	}
-
-	if (name === "Enter") screen += "\n"
-	else if (name === "Tab") screen += "\t"
-	else if (name === "Shift") return false;
-	else if (name === "Meta") return false;
-	else if (name === "Alt") return false;
-	else if (name === "Backspace") {
-		screen = screen.slice(0, -1)
-	} else screen += name
-
-	document.body.innerHTML = screen + "<span>" + "</span>"
-
-	event.preventDefault()
-
-	return true;
-}
-
-
-
-
-for (const e of s) {
-		string += e;
-		if (e == "\n") column = 0; else column++;
-		//if (column == 30) { string += "\n"; column = 0; }
-	}
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* 
-
-
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Daniels placeholder website title</title>
-    <link rel="stylesheet" href="style.css">
-    <script type="module" src="script.js"></script>
-  </head>
-  <body><span></span></body>
-</html>
-
-
-
-
-// if you want to add the control key up event...
-
-
-  document.addEventListener('keyup', (event) => {
-    var name = event.key;
-    if (name === 'Control') {
-      alert('Control key released');
-    }
-  }, false);
-*/
-
-
-
-
-
-
-
-
-
-
-
-/*
-document.addEventListener("keyup", detectTabKey);
-
-function detectTabKey(e) {
-    if (e.keyCode == 9) {
-        activeElem = document.activeElement;
-        alert(activeElem.href);
-    }
-}
-
-document.onkeypress = function(evt) {
-	evt = evt || window.event;
-	var code = evt.keyCode || evt.which;
-	var c = String.fromCharCode(code);
-	document.body.textContent += code + " ";
-};
-
-
-
-
-
-export const wasmBrowserInstantiate = async (module, imports) => {
-
-	let response = undefined
-	if (WebAssembly.instantiateStreaming) {
-		response = await WebAssembly.instantiateStreaming(fetch(module), imports)
-	} else {
-		const task = async () => {
-			const wasmArrayBuffer = await fetch(module).then(response => response.arrayBuffer())
-			return WebAssembly.instantiate(wasmArrayBuffer, imports)
-		};
-		response = await task()
-	}
-	return response;
-
-};
-
-const imports = { env: { abort: () => console.log("Abort!") } };
-const m = await wasmBrowserInstantiate("program.wasm", imports);
-const r = m.instance.exports.add(1,2);
-
-
-
-
-
-*/
