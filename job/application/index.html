@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript" language="javascript">
+
+function redirect() {
+	window.location.href="/job/application/success.html";
+}  
+
+</script>
+</head>
+<body>
+
+<h1>Totally Legit Google (TLG) Inc.</h2>
+<hr>
+<h3>Software Engineer L3 - <i>Mountain View, CA</i></h3>
+
+<p>
+<i>Thank you for your interest in Google's Software Engineer L3 position!</i>
+<br>
+Apply simply fill out the information below, and we will look at your application as soon as possible.
+</p>
+
+<form action="/job/application/success.html" onsubmit="return redirect();">
+&nbsp;	<label for="firstname">First Name:</label><br>
+&nbsp;	<input type="text" id="firstname" name="firstname" placeholder="John"><br>
+
+&nbsp;	<label for="lastname">Last Name:</label><br>
+&nbsp;	<input type="text" id="lastname" name="lastname" placeholder="Doe"><br><br>
+
+&nbsp;	<label for="birthday">Birthday:</label><br>
+&nbsp;	<input type="date" id="birthday" name="birthday"><br><br>
+
+&nbsp;	<input type="submit" value="Submit" onclick="redirect();"> 
+</form> 
+
+<p> By Clicking "Submit" you agree that the information is correct to the best of your ability, as required by law. </p>
+
+</body>
+</html>
+
