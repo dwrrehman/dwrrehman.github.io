@@ -1,6 +1,7 @@
-// web terminal emulator running a rv32-like vm, that i'm made to be my personal website!
+// web terminal emulator running a rv32 vm, that i've made to be my personal website!
 // ....cuz why not.
 // written on 1202401011.202029, by dwrr.
+// updated on 1202504034.001706
 
 import { executable } from "./program.js";
 
@@ -118,31 +119,354 @@ function save() {
 	let braw = atob(raw);
 }
 
-async function ecall(x) {
-	if (false) {}
-	else if (x == 0) return 0;
-	else if (x == 1) return 1;
-	else if (x == 2) registers[0] = await read_syscall(registers[1], registers[2]);
-	else if (x == 3) registers[0] = write_syscall(registers[1], registers[2]);
+async function ecall() {
+
+	let n = registers[17];
+	let a0 = registers[17];
+	let a1 = registers[10];
+	let a2 = registers[11];
+
+	     if (n == 0) return 0; // (unknown system call)
+	else if (n == 1) return 1; // system_exit
+
+	else if (n == 2) registers[10] = await read_syscall(a0, a1);   // count = read(address length)
+	else if (n == 3) registers[10] = write_syscall(a0, a1);        // count = write(address length)
+
 	return 0;
 }
 
-async function virtual_machine(instruction_count) {
+async function riscv_virtual_machine(instruction_count) {
 	let pc = 0; 
 	while (pc < instruction_count) {
 
-		let op = memory[pc + 0] | (memory[pc + 1] << 8);
-		let r0 = memory[pc + 2] | (memory[pc + 3] << 8);
-		let r1 = memory[pc + 4] | (memory[pc + 5] << 8);
-		let r2 = memory[pc + 6] | (memory[pc + 7] << 8);
+		let word = memory[pc + 0] | (memory[pc + 1] << 8) | (memory[pc + 2] << 16) | (memory[pc + 3] << 24);
 
-		r0 = r0 < 32768 ? r0 : r0 - 65536;
-		r1 = r1 < 32768 ? r1 : r1 - 65536;
-		r2 = r2 < 32768 ? r2 : r2 - 65536;
+		console.log("[pc = " + pc + "]: executing: " + word.toString(16));
 
-		console.log("executing: " + op + " : " + r0 + " : " + r1 + " : " + r2 + "..."); 
+		let op = word & 0x7F;
+		let bit30 = (word >> 30) & 1;
+		let Rd = (word >> 7) & 0x1F;
+		let fn = (word >> 12) & 0x7;
+		let Rs1 = (word >> 15) & 0x1F;
+		let Rs2 = (word >> 20) & 0x1F;
+		let imm12 = (word >> 20) & 0xFFF;
+		if (((imm12 >> 11) & 0x1) == 1) imm12 |= 0xFFFFF000;
+		let U_imm20 = (word >> 12) & 0xFFFFF000;
 
-		if (op == 0) { if (await ecall(r0)) return; } // ecall
+		registers[0] = 0;
+
+		let save_pc = pc;
+
+		if (op == 0x37) { // LUI
+			console.log("LUI x" + Rd + " #" + U_imm20.toString(16));
+			registers[Rd] = U_imm20;
+			pc += 4;
+			
+		} else if (op == 0x17) { // AUIPC
+			console.log("AUIPC x" + Rd + " #" + U_imm20.toString(16));
+			registers[Rd] = U_imm20 + pc;
+			pc += 4;
+			
+		} else if (op == 0x6F) { // JAL
+			let imm10_1 = (word >> 21) & 0x3FF;
+			let imm20 = (word >> 31) & 0x1;
+			let imm11 = (word >> 10) & 0x1;
+			let imm19_12 = (word >> 12) & 0xFF;
+			let imm = (imm20 << 20) | (imm19_12 << 12) | (imm11 << 11) | (imm10_1 << 1);
+			if (imm20 == 1) imm |= 0xFFE00000;
+			console.log("JAL x" + Rd + " #" + imm.toString(16));
+			registers[Rd] = pc + 4;
+			pc += imm;
+			
+		} else if (op == 0x67) { // JALR
+			console.log("JALR x" + Rd + " x" + Rs1 + " #" + imm12.toString(16));
+			let target = registers[Rs1] + imm12;
+			target &= 0xFFFFFFFE;
+			registers[Rd] = pc + 4;
+			pc = target;
+			
+		} else if (op == 0x63) { // BEQ / BNE / BLT / BGE / BLTU / BGEU 
+			let limm12 = (word >> 31) & 0x1;
+			let imm10_5 = (word >> 25) & 0x3F;
+			let imm11 = (word >> 7) & 0x1;
+			let imm4_1 = (word >> 8) & 0xF;
+			let imm = (limm12 << 12) | (imm11 << 11) | (imm10_5 << 5) | (imm4_1 << 1);
+			if (limm12 == 1) imm |= 0xFFFFE000;
+			
+			if (fn == 0) { // BEQ
+				console.log("BEQ x" + Rs1 + " x" + Rs2 + " #" + imm.toString(16));
+				if (registers[Rs1] == registers[Rs2]) pc += imm;
+
+			} else if (fn == 1) { // BNE
+				console.log("BNE x" + Rs1 + " x" + Rs2 + " #" + imm.toString(16));
+				if (registers[Rs1] != registers[Rs2]) pc += imm;
+
+			} else if (fn == 4) { // BLT
+				console.log("BLT x" + Rs1 + " x" + Rs2 + " #" + imm.toString(16));   // bug: make these signed checks. 
+				if (registers[Rs1] < registers[Rs2]) pc += imm;
+
+			} else if (fn == 5) { // BGE
+				console.log("BGE x" + Rs1 + " x" + Rs2 + " #" + imm.toString(16));   // bug: make these signed checks. 
+				if (registers[Rs1] >= registers[Rs2]) pc += imm;
+
+			} else if (fn == 6) { // BLTU
+				console.log("BLTU x" + Rs1 + " x" + Rs2 + " #" + imm.toString(16));
+				if (registers[Rs1] < registers[Rs2]) pc += imm;
+
+			} else if (fn == 7) { // BGEU
+				console.log("BGEU x" + Rs1 + " x" + Rs2 + " #" + imm.toString(16));
+				if (registers[Rs1] >= registers[Rs2]) pc += imm;
+			}
+			
+		} else if (op == 0x03) { // LB / LH / LW / LBU / LHU
+
+			if (fn == 0) { // LB
+				console.log("LB x" + Rd + " x" + Rs1 + " #" + imm12.toString(16));
+				registers[Rd] = 0;
+				registers[Rd] |= (memory[registers[Rs1] + imm12 + 0] << 0);      // make this sign extend the destination.
+
+			} else if (fn == 1) { // LH
+				console.log("LH x" + Rd + " x" + Rs1 + " #" + imm12.toString(16));
+				registers[Rd] = 0;
+				registers[Rd] |= (memory[registers[Rs1] + imm12 + 0] << 0);     // make this sign extend the destination.
+				registers[Rd] |= (memory[registers[Rs1] + imm12 + 1] << 8);
+	
+			} else if (fn == 2) { // LW
+				console.log("LW x" + Rd + " x" + Rs1 + " #" + imm12.toString(16));
+				registers[Rd] = 0;
+				registers[Rd] |= (memory[registers[Rs1] + imm12 + 0] << 0);
+				registers[Rd] |= (memory[registers[Rs1] + imm12 + 1] << 8);
+				registers[Rd] |= (memory[registers[Rs1] + imm12 + 2] << 16);
+				registers[Rd] |= (memory[registers[Rs1] + imm12 + 3] << 24);
+
+			} else if (fn == 4) { // LBU 
+				console.log("LB x" + Rd + " x" + Rs1 + " #" + imm12.toString(16));
+				registers[Rd] = 0;
+				registers[Rd] |= (memory[registers[Rs1] + imm12 + 0] << 0);
+
+			} else if (fn == 5) { // LHU
+				console.log("LH x" + Rd + " x" + Rs1 + " #" + imm12.toString(16));
+				registers[Rd] = 0;
+				registers[Rd] |= (memory[registers[Rs1] + imm12 + 0] << 0);
+				registers[Rd] |= (memory[registers[Rs1] + imm12 + 1] << 8);	
+			} 
+			pc += 4;
+
+
+		} else if (op == 0x23) { // SB / SH / SW
+
+			let imm = 0;
+
+			if (fn == 0) {
+				console.log("SB x" + Rs1 + " #" + imm.toString(16) + " x" + Rs2);
+				memory[registers[Rs1] + imm + 0] = (registers[Rs2] >> 0) & 0xFF;
+
+			} else if (fn == 1) {
+				console.log("SH x" + Rs1 + " #" + imm.toString(16) + " x" + Rs2);
+				memory[registers[Rs1] + imm + 0] = (registers[Rs2] >> 0) & 0xFF;
+				memory[registers[Rs1] + imm + 1] = (registers[Rs2] >> 8) & 0xFF;
+
+			} else if (fn == 2) {
+				console.log("SW x" + Rs1 + " #" + imm.toString(16) + " x" + Rs2);
+				memory[registers[Rs1] + imm + 0] = (registers[Rs2] >> 0) & 0xFF;
+				memory[registers[Rs1] + imm + 1] = (registers[Rs2] >> 8) & 0xFF;
+				memory[registers[Rs1] + imm + 2] = (registers[Rs2] >> 16) & 0xFF;
+				memory[registers[Rs1] + imm + 3] = (registers[Rs2] >> 24) & 0xFF;
+			}
+
+			pc += 4;
+
+
+
+		} else if (op == 0x13) { // ADDI / SLTI / SLTIU / XORI / ORI / ANDI / SLLI / SRLI / SRAI
+
+			if (fn == 0) { // ADDI
+				console.log("ADDI x" + Rd + " x" + Rs1 + " #" + imm12.toString(16));
+				registers[Rd] = registers[Rs1] + imm12;
+
+			} else if (fn == 1) { // SLLI
+				console.log("SLLI x" + Rd + " x" + Rs1 + " #" + imm12.toString(16));
+				registers[Rd] = registers[Rs1] << imm12;
+
+			} else if (fn == 2) { // SLTI
+				console.log("SLTI x" + Rd + " x" + Rs1 + " #" + imm12.toString(16));
+				registers[Rd] = registers[Rs1] < imm12;        // bug: make this check a signed-less-than. 
+
+			} else if (fn == 3) { // SLTIU
+				console.log("SLTIU x" + Rd + " x" + Rs1 + " #" + imm12.toString(16));
+				registers[Rd] = registers[Rs1] < imm12;
+
+			} else if (fn == 4) { // XORI
+				console.log("XORI x" + Rd + " x" + Rs1 + " #" + imm12.toString(16));
+				registers[Rd] = registers[Rs1] ^ imm12;
+
+			} else if (fn == 5 && bit30 == 0) { // SRLI
+				console.log("SRLI x" + Rd + " x" + Rs1 + " #" + imm12.toString(16));
+				registers[Rd] = registers[Rs1] >> (imm12 & 0x1F);
+
+			} else if (fn == 5 && bit30 == 1) { // SRAI
+				console.log("SRAI x" + Rd + " x" + Rs1 + " #" + imm12.toString(16));
+				registers[Rd] = registers[Rs1] >> (imm12 & 0x1F);    // bug: make this do an actual arithmetic shift right. 
+
+			} else if (fn == 6) { // ORI
+				console.log("ORI x" + Rd + " x" + Rs1 + " #" + imm12.toString(16));
+				registers[Rd] = registers[Rs1] | imm12;
+
+			} else if (fn == 7) { // ANDI
+				console.log("ANDI x" + Rd + " x" + Rs1 + " #" + imm12.toString(16));
+				registers[Rd] = registers[Rs1] & imm12;
+			}
+			pc += 4;
+
+
+
+		} else if (op == 0x33) { // ADD / SUB / SLL / SLT / SLTU / XOR / SRL / SRA / OR / AND
+
+
+			if (fn == 0 && bit30 == 0) { // ADD
+				console.log("ADD x" + Rd + " x" + Rs1 + " x" + Rs2);
+				registers[Rd] = registers[Rs1] + registers[Rs2];
+
+			} else if (fn == 0 && bit30 == 1) { // SUB
+				console.log("SUB x" + Rd + " x" + Rs1 + " x" + Rs2);
+				registers[Rd] = registers[Rs1] - registers[Rs2];
+
+			} else if (fn == 1) { // SLL
+				console.log("SLL x" + Rd + " x" + Rs1 + " x" + Rs2);
+				registers[Rd] = registers[Rs1] << registers[Rs2];
+
+			} else if (fn == 2) { // SLT
+				console.log("SLT x" + Rd + " x" + Rs1 + " x" + Rs2);
+				registers[Rd] = registers[Rs1] < registers[Rs2];        // bug: make this check a signed-less-than. 
+
+			} else if (fn == 3) { // SLTU
+				console.log("SLTU x" + Rd + " x" + Rs1 + " x" + Rs2);
+				registers[Rd] = registers[Rs1] < registers[Rs2];
+
+			} else if (fn == 4) { // XOR
+				console.log("XOR x" + Rd + " x" + Rs1 + " x" + Rs2);
+				registers[Rd] = registers[Rs1] ^ registers[Rs2];
+
+			} else if (fn == 5 && bit30 == 0) { // SRL / SRA
+				console.log("SRL x" + Rd + " x" + Rs1 + " x" + Rs2);
+				registers[Rd] = registers[Rs1] >> registers[Rs2];
+
+			} else if (fn == 5 && bit30 == 1) { // SRL / SRA
+				console.log("SRA x" + Rd + " x" + Rs1 + " x" + Rs2);
+				registers[Rd] = registers[Rs1] >> registers[Rs2];       // bug: make this an actual arithmetic shift right. 
+
+			} else if (fn == 6) { // OR
+				console.log("OR x" + Rd + " x" + Rs1 + " x" + Rs2);
+				registers[Rd] = registers[Rs1] | registers[Rs2];
+
+			} else if (fn == 7) { // AND
+				console.log("AND x" + Rd + " x" + Rs1 + " x" + Rs2);
+				registers[Rd] = registers[Rs1] & registers[Rs2];
+			}
+			pc += 4;
+
+
+		} else if (op == 0x1F) { // FENCE / FENCE.I
+			console.log("FENCE / FENCE.I ...");
+			putstring("\nerror: illegal instruction opcode: 0x" + op.toString(16));
+			pc += 4;
+
+
+		} else if (op == 0x73) { // ECALL / EBREAK / CSRRW / CSRRW / CSRRS / CSRRC / CSRRWI / CSRRSI / CSRRCI
+
+			if (op == word) {
+				console.log("ECALL");
+				if (await ecall()) return; 
+
+			} else {
+				console.log("EBREAK / CSRxx ...");
+				putstring("\nerror: illegal instruction opcode: 0x" + op.toString(16));
+			}
+			pc += 4;
+
+		} else {
+			putstring("\nerror: illegal instruction opcode: 0x" + op.toString(16));
+			pc += 4;
+		}
+
+		//pc = save_pc + 4;
+	}
+
+	// screen = startup;
+	// save();	
+	putstring("[process exited]");
+}
+
+async function execute_program() {
+
+	nvmemory = new Uint8Array(180);
+	nvmemory.fill(0);
+
+	registers = new Uint32Array(32);
+	registers.fill(0);
+	
+	memory = new Uint8Array(65536 * 2);
+	memory.fill(0);
+
+	for (let i = 0; i < executable.length; i++) 
+		memory[i] = executable[i];
+
+	document.getElementById('in').focus();
+	await riscv_virtual_machine(executable.length);
+}
+
+const main = async () => {
+	let raw = get_cookie("state");
+	decodeURIComponent(raw)
+	let braw = atob(raw);
+	let state = {}
+	try { state = JSON.parse(braw); } 
+	catch(e) { console.error(e); }
+	if (state._nvmemory) nvmemory = state._nvmemory;
+	document.getElementById('in').focus();
+	putstring(startup);
+	document.getElementById('in').focus();
+	execute_program();
+};
+
+main();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*		if (op == 0) { if (await ecall(r0)) return; } // ecall
 
 		else if (op == 2)  registers[r0] = registers[r1] + registers[r2]; // add
 		else if (op == 3)  registers[r0] = registers[r1] - registers[r2]; // sub
@@ -219,54 +543,8 @@ async function virtual_machine(instruction_count) {
 
 		else { putstring("\nfatal error: unknown instruction opcode: " + op + "\nhow did you get here?..."); }
 
-		pc += 8;
-	}
-	
-	// screen = startup;
-	// save();	
 
-	putstring("[process exited]");
-}
-
-async function execute_program() {
-
-	nvmemory = new Uint8Array(180);
-	nvmemory.fill(0);
-
-	registers = new Int32Array(4096);
-	registers.fill(0);
-	
-	memory = new Uint8Array(65536 * 2);
-	memory.fill(0);
-
-	for (let i = 0; i < executable.length; i++) 
-		memory[i] = executable[i]
-
-	document.getElementById('in').focus();
-	await virtual_machine(executable.length);
-}
+*/
 
 
 
-const main = async () => {
-
-	let raw = get_cookie("state");
-	decodeURIComponent(raw)
-	let braw = atob(raw);
-	//console.log(raw);
-	//console.log(braw);
-
-	let state = {}
-	try { state = JSON.parse(braw); } 
-	catch(e) { console.error(e); }
-
-	//console.log(state);
-	if (state._nvmemory) nvmemory = state._nvmemory;
-
-	document.getElementById('in').focus();
-	putstring(startup);
-	document.getElementById('in').focus();
-	execute_program();
-};
-
-main();
