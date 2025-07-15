@@ -15,18 +15,22 @@ body {
   color: #f0f0f0; 
 }
 
+/*
+
 body span {
-  height: 30px;
-  margin-bottom: -4px;
-  width: 2px;
+  height: 10px;
+  margin-bottom: 0px;
+  width: 3px;
   background: white;
   opacity: 1;
   overflow: hidden;
   display: inline-block;
-  animation: blink 0.7s linear infinite alternate;
+  animation: blink 0.8s linear infinite alternate;
 }
 
 @keyframes blink {
   50% { opacity: 0; }
   100% { opacity: 1; }
 }
+
+*/
