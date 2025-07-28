@@ -31,7 +31,7 @@ let screen = "";
 
 function update_screen() {
 	document.body.innerHTML = screen + 
-	"<textarea id='in' style='height:12px; width:100px; opacity:0; filter:alpha(opacity=0);' autofocus></textarea>"
+	"<textarea id='in' style='width:100px; opacity:0; filter:alpha(opacity=0);' autofocus></textarea>"
 	document.getElementById('in').focus();
 }
 
@@ -612,5 +612,31 @@ main();
 
 */
 
+
+
+
+
+
+
+
+/*
+
+body span {
+  height: 10px;
+  margin-bottom: 0px;
+  width: 3px;
+  background: white;
+  opacity: 1;
+  overflow: hidden;
+  display: inline-block;
+  animation: blink 0.8s linear infinite alternate;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+*/
 
 
