@@ -1,10 +1,44 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Daniel W. R. Rehman's website</title>
-    <link rel="stylesheet" href="style.css">
-    <script type="module" src="script.js"></script>
-  </head>
-  <body><textarea id='in' style='width:100px; opacity:0; filter:alpha(opacity=0);' autofocus></textarea></body>
+<head>
+	<meta charset="UTF-8" />
+	<title>Daniel W. R. Rehman's website</title>
+	<style>
+	* {
+		margin: 0;
+		padding: 0;
+	}
+	html, body {
+		height: 100%;
+		overflow: hidden;
+		background: transparent;
+		background-color: black;
+		color: #f0f0f0;
+	}
+	p {
+		position: absolute;
+		top: 0;
+		left: 0;
+		white-space: pre;
+		tab-size: 8;
+		font-size: 30px;
+		font-family: Courier New;
+	}
+	textarea {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 4em;
+		height: 4em;
+		resize: none;
+		border: none;
+		opacity: 0; 
+		filter:alpha(opacity=0);
+	}
+	</style>
+	<script type="module" src="script.js"></script>
+</head>
+<body>
+	<p id='out'></p>
+	<textarea id='in' autofocus></textarea></body>
 </html>
