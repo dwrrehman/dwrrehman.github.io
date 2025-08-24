@@ -1,0 +1,249 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*let startup = `
+   <img style="height: 130px; width: 130px; vertical-align: middle; border-radius: 35px;" src="https://avatars.githubusercontent.com/u/19484282?v=4" alt="Hello world!" />   <b>Hi! I'm Daniel Rehman!</b>
+
+     GitHub:   <a href="https://github.com/dwrrehman">github.com/dwrrehman</a>
+     GitLab:   <a href="https://gitlab.com/dwrrehman">gitlab.com/dwrrehman</a>
+     LinkedIn: <a href="https://linkedin.com/in/dwrr">linkedin.com/in/dwrr</a>
+     Resume:   <a href="./resume.pdf">./resume.pdf</a>
+
+     Feel free to explore my programming 
+      projects here! Try using the unix 
+     commands to explore, or type "<i>help</i>".
+
+`;*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*function backspace() {
+	screen = screen.slice(0, -1); 
+	update_screen();
+	document.getElementById('in').focus();
+}*/
+
+
+
+
+
+
+/*		if (op == 0) { if (await ecall(r0)) return; } // ecall
+
+		else if (op == 2)  registers[r0] = registers[r1] + registers[r2]; // add
+		else if (op == 3)  registers[r0] = registers[r1] - registers[r2]; // sub
+		else if (op == 4)  registers[r0] = registers[r1] * registers[r2]; // mul
+		else if (op == 5)  registers[r0] = registers[r1] / registers[r2]; // div
+		else if (op == 6)  registers[r0] = registers[r1] % registers[r2]; // rem
+		else if (op == 7)  registers[r0] = registers[r1] & registers[r2]; // and
+		else if (op == 8)  registers[r0] = registers[r1] | registers[r2]; // or
+		else if (op == 9)  registers[r0] = registers[r1] ^ registers[r2]; // xor
+		else if (op == 10) registers[r0] = registers[r1] < registers[r2]; // slt
+		else if (op == 11) registers[r0] = registers[r1] << registers[r2];// sll
+		else if (op == 12) registers[r0] = registers[r1] >> registers[r2];// srl
+
+		else if (op == 13)  registers[r0] = registers[r1] + r2; // addi
+		else if (op == 14)  registers[r0] = registers[r1] - r2; // subi
+		else if (op == 15)  registers[r0] = registers[r1] * r2; // muli
+		else if (op == 16)  registers[r0] = registers[r1] / r2; // divi
+		else if (op == 17)  registers[r0] = registers[r1] % r2; // remi
+		else if (op == 18)  registers[r0] = registers[r1] & r2; // andi
+		else if (op == 19)  registers[r0] = registers[r1] | r2; // ori
+		else if (op == 20)  registers[r0] = registers[r1] ^ r2; // xori
+		else if (op == 21) registers[r0] = registers[r1] < r2; // slti
+		else if (op == 22) registers[r0] = registers[r1] << r2;// slli
+		else if (op == 23) registers[r0] = registers[r1] >> r2;// srli
+
+		else if (op == 24) { // lb
+			registers[r0] = memory[registers[r1] + r2];
+		} else if (op == 25) { // lh
+			let m0 = memory[registers[r1] + r2 + 0];
+			let m1 = memory[registers[r1] + r2 + 1];
+			registers[r0] = (m1 << 8) + (m0);
+		} else if (op == 26) { // lw
+			let m0 = memory[registers[r1] + r2 + 0];
+			let m1 = memory[registers[r1] + r2 + 1];
+			let m2 = memory[registers[r1] + r2 + 2];
+			let m3 = memory[registers[r1] + r2 + 3];
+			registers[r0] = (m3 << 24) +  (m2 << 16) +  (m1 << 8) + (m0);
+
+		} else if (op == 27) { // sb
+			memory[registers[r1] + r2] = 0xFF & registers[r0];
+		} else if (op == 28) { // sh
+			memory[registers[r1] + r2 + 0] = 0xFF & registers[r0];
+			memory[registers[r1] + r2 + 1] = 0xFF & (registers[r0] >> 8);
+		} else if (op == 29) { // sw
+			memory[registers[r1] + r2 + 0] = 0xFF & registers[r0];
+			memory[registers[r1] + r2 + 1] = 0xFF & (registers[r0] >> 8);
+			memory[registers[r1] + r2 + 2] = 0xFF & (registers[r0] >> 16);
+			memory[registers[r1] + r2 + 3] = 0xFF & (registers[r0] >> 24);
+		} 
+
+		else if (op == 30) { if (registers[r1] == registers[r2]) pc += r0 * 8; } // beq
+		else if (op == 31) { if (registers[r1] != registers[r2]) pc += r0 * 8; } // bne
+		else if (op == 32) { if (registers[r1] <  registers[r2]) pc += r0 * 8; } // blt
+		else if (op == 33) { if (registers[r1] >= registers[r2]) pc += r0 * 8; } // bge
+		else if (op == 34) { registers[r1] = pc; pc += r0; } // jal
+		else if (op == 35) { registers[r1] = pc; pc = registers[r0]; } // jalr
+
+		else if (op == 40) { // debug instruction
+
+			console.log("-------- registers --------");
+			for (let i = 0; i < registers.length; i++) {
+				if (registers[i] != 0) {
+					console.log("registers[" + i + "] = " + registers[i] + "    ");
+				}
+			}
+
+			console.log("-------- memory --------");
+			for (let i = 0; i < memory.length; i++) {
+				if (memory[i] != 0) {
+					console.log("memory[" + i + "] = " + memory[i] + "    ");
+				}
+			}
+		}
+
+		else { putstring("\nfatal error: unknown instruction opcode: " + op + "\nhow did you get here?..."); }
+
+
+*/
+
+
+
+
+
+
+
+
+/*
+
+body span {
+  height: 10px;
+  margin-bottom: 0px;
+  width: 3px;
+  background: white;
+  opacity: 1;
+  overflow: hidden;
+  display: inline-block;
+  animation: blink 0.8s linear infinite alternate;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+*/
+
+
+
+
+
