@@ -1,44 +1,159 @@
 <!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8" />
-	<title>Daniel W. R. Rehman's website</title>
-	<style>
-	* {
-		margin: 3px;
-		padding: 0;
-	}
-	html, body {
-		height: 100%;
-		overflow: hidden;
-		background: transparent;
-		background-color: black;
-		color: #fefefe;
-	}
-	p {
-		position: absolute;
-		top: 2px;
-		left: 3px;
-		white-space: pre;
-		tab-size: 8;
-		font-size: 30px;
-		font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-	}
-	textarea {
-		position: absolute;
-		top: 2px;
-		left: 3px;
-		width: 4em;
-		height: 4em;
-		resize: none;
-		border: none;
-		opacity: 0; 
-		filter:alpha(opacity=0);
-	}
-	</style>
-	<script type="module" src="script.js"></script>
-</head>
-<body>
-	<p id='out'></p>
-	<textarea id='in' autofocus></textarea></body>
-</html>
+<html lang="en">
+<title>Daniel Rehman</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"><style>
+body { font-size: 140%; background: #000; color: #fff; padding: 1rem; line-height: 1.5; font-family: ui-monospace, monospace; }
+nav { display: grid; gap: 1rem; margin-block: 1rem; grid-template-columns: repeat(auto-fit, minmax(15ch, 1fr)); }
+a { color: inherit; border: 1px solid; border-radius: 5px; padding: 0.5rem; text-decoration: none; text-align: center; }
+a:hover { background: #fff; color: #000; } section { display: none; }
+section:target { display: block; } body:has(section:target) #home { display: none; } 
+#profilepic { border-radius: 30px; float: left; width: 250px; padding: 10px; margin: 10px; } 
+</style><main id="home"><h4><a href="#home">dwrr</a> daniel rehman's website</h4>
+<nav>
+<a href="#about">about</a>
+<a href="#projects">projects</a>
+<a href="#code">code</a>
+<a href="#music">music</a>
+<a href="#artwork">artwork</a>
+<a href="#writing">writing</a>
+<a href="#links">links</a>
+</nav>
+<p>
+this is Daniel Rehman's website, its still a work in progress, but its getting there. Mauris vel viverra massa. Quisque suscipit commodo turpis, non mollis est aliquet quis. Suspendisse potenti. Proin auctor dolor et est laoreet sagittis id a ligula. Duis nulla velit, vestibulum vitae nisl nec, molestie vestibulum erat. Donec nisi elit, laoreet vitae metus a, suscipit commodo mauris. Phasellus ac lectus purus. Cras diam elit, commodo eu sem in, eleifend tincidunt augue. Maecenas eget venenatis ligula, sit amet pulvinar ex. Suspendisse mollis tristique feugiat.
+</p>
+</main>
+
+
+<section id="about"><h4><a href="#home">dwrr</a> about me!</h4>
+<img id="profilepic" alt="Daniel Rehman, aka me!" src="https://avatars.githubusercontent.com/u/19484282?v=4">
+<p>
+Hi I'm Daniel!! nice to meet you! Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc neque lorem, varius quis magna sit amet, dignissim rutrum lectus. Quisque auctor convallis est a luctus. Praesent lacinia libero ut arcu dapibus semper. Ut vestibulum diam at urna volutpat luctus. Quisque auctor convallis est a luctus. Praesent lacinia libero ut arcu dapibus semper. Ut vestibulum diam at urna volutpat luctus. 
+<br><br>
+Quisque auctor convallis est a luctus. Praesent lacinia libero ut arcu dapibus semper. Ut vestibulum diam at urna volutpat luctus. Mauris vel viverra massa. Quisque suscipit commodo turpis, non mollis est aliquet quis. Suspendisse potenti. Proin auctor dolor et est laoreet sagittis id a ligula. Duis nulla velit, vestibulum vitae nisl nec, molestie vestibulum erat. Donec nisi elit, laoreet vitae metus a, suscipit commodo mauris. Phasellus ac lectus purus. Cras diam elit, commodo eu sem in, eleifend tincidunt augue. Maecenas eget venenatis ligula, sit amet pulvinar ex. 
+<br><br>
+Ut vestibulum diam at urna volutpat luctus. Mauris vel viverra massa. Quisque suscipit commodo turpis, non mollis est aliquet quis. Suspendisse potenti. Proin auctor dolor et est laoreet sagittis id a ligula. Duis nulla velit, vestibulum vitae nisl nec, molestie vestibulum erat. Donec nisi elit, laoreet vitae metus a, suscipit commodo mauris. Phasellus ac lectus purus. Cras diam elit, commodo eu sem in, eleifend tincidunt augue. Maecenas eget venenatis ligula, sit amet pulvinar ex. Suspendisse mollis tristique feugiat.
+<br><br>
+</p></section>
+
+
+<section id="links"><h4><a href="#home">dwrr</a> links!</h4>
+<nav>
+<a href="#home">back</a>
+<a href="https://www.youtube.com/@Daniel.W.R.Rehman">my youtube</a>
+<a href="https://gitlab.com/dwrrehman">my gitlab</a>
+<a href="https://github.com/dwrrehman">my github</a>
+<a href="https://discord.com/users/dwrr">my discord</a>
+<a href="https://linkedin.com/dwrr">my linkedin</a>
+</nav>
+<p>Some links to my other platforms which you might find useful!</p>
+</section>
+
+
+
+<section id="projects"><h4><a href="#home">dwrr</a> projects!</h4>
+<nav>
+<a href="#home">back</a>
+<a href="#universe_algorithm">universe algorithm</a>
+<a href="#binary_language">binary language</a>
+<a href="#led_display">led display</a>
+<a href="#epaper_notebook">epaper notebook</a>
+<a href="#36key_keyboard">36-key keyboard</a>
+<a href="#solar_charger_board">solar charger board</a>
+<a href="#other_creations">other creations</a>
+</nav>
+<p>here you can find my piano and organ improvisation recordings, as well as my compositions and other things i've made in music.</p>
+</section>
+
+
+<section id="code"><h4><a href="#home">dwrr</a> code!</h4>
+<nav>
+<a href="#home">back</a>
+<a href="#cross_assembler">cross assembler</a>
+<a href="#optimizing_compiler">optimizing compiler</a>
+<a href="#text_editor">text editor</a>
+<a href="#shell">shell</a>
+<a href="#music_utility">music utility</a>
+<a href="#sandbox_voxel_game">sandbox voxel game</a>
+<a href="#sudoku_game">sudoku game</a>
+<a href="#nbody_simulation">nbody simulation</a>
+<a href="#text_adventure_game">text adventure game</a>
+<a href="#asteroids_game">asteroids game</a>
+<a href="#directory_webpage">directory webpage</a>
+<a href="#forth_variant">forth variant</a>
+<a href="#lisp_variant">lisp variant</a>
+<a href="#other_creations">other creations</a>
+</nav>
+<p>here you can find my piano and organ improvisation recordings, as well as my compositions and other things i've made in music.</p>
+</section>
+
+
+<section id="writing"><h4><a href="#home">dwrr</a> writing!</h4>
+<nav>
+<a href="#home">back</a>
+<a href="#poetry">poetry</a>
+<a href="#blog">blog</a>
+<a href="#stories">stories</a>
+<a href="#thoughts">thoughts</a>
+</nav>
+<p>here you can find my poetry, blog posts, and random writing and thoughts on various topics.</p>
+</section>
+
+
+<section id="poetry"><h4><a href="#home">dwrr</a> poetry!</h4>
+<nav>
+<a href="#writing">back</a>
+<a href="/poem_untitled0.txt">untitled0</a>
+<a href="/poem_flower.txt">flower</a>
+<a href="/poem_au_revoir.txt">au_revoir</a>
+<a href="/poem_spinning.txt">spinning</a>
+<a href="/poem_simple.txt">simple</a>
+<a href="/poem_love_is.txt">love_is</a>
+<a href="/poem_reflection.txt">reflection</a>
+</nav>
+</section>
+
+
+<section id="music"><h4><a href="#home">dwrr</a> music!</h4>
+<nav>
+<a href="#home">back</a>
+<a href="#piano_recordings">piano improv</a>
+<a href="#organ_recordings">organ improv</a>
+<a href="#compositions">compositions</a>
+<a href="#other_creations">other creations</a>
+</nav>
+<p>here you can find my piano and organ improvisation recordings, as well as my compositions and other things i've made in music.</p>
+</section>
+
+
+<section id="piano_recordings"><h4><a href="#home">dwrr</a> piano recordings!</h4>
+<nav>
+<a href="#music">back</a>
+<a href="/5.mp3">5</a>
+<a href="/938.mp3">938</a>
+<a href="/938.mp3">938</a>
+<a href="/938.mp3">930</a>
+<a href="/938.mp3">931</a>
+<a href="/938.mp3">932</a>
+<a href="/938.mp3">933</a>
+<a href="/938.mp3">934</a>
+<a href="/938.mp3">935</a>
+<a href="/941.mp3">941</a>
+<a href="/942.mp3">942</a>
+<a href="/943.mp3">943</a>
+</nav>
+</section>
+
+
+
+<section id="blog"><h4><a href="#home">dwrr</a> blog!</h4>
+<nav>
+<a href="#writing">back</a>
+<a href="/blog_1202602242.222230.txt">why C is weird 1202602242.222230 </a>
+<a href="/blog_1202602242.222252.txt">web dev is very stupid 1202602242.222252 </a>
+<a href="/blog_1202602242.222230.txt">capitalism is bad 1202602253.122230</a>
+</nav>
+</section>
+
+
+
+
